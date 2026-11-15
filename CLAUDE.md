@@ -5,9 +5,12 @@
 (옛 `.clinerules/01-project-rules.md`를 옮겨 현재 상태에 맞게 고침. 원본은 git 기록 `v0.1.0-dev.2`에 있음)
 제품 요구사항과 구현 현황: `PRD.md`, 다음 순서: `docs/NEXT_STEPS.md`, 단계별 기록: `DEVELOPMENT_LOG.md`.
 
+## 앱의 목적 (우선순위 판단 기준)
+학생의 성적·생기부로 **지원 가능한 대학을 찾고**, **전형별 정보·등록금**과 **근거를 밝힌 합격 가능성 예측**을 제공한다. 다음 작업을 고를 때 이 목적(특히 성적 기반 후보 판정과 예측)에 가장 가까운 일을 우선한다. 데이터 정확도 작업은 예측에 쓰이는 데이터부터 한다.
+
 ## 절대 규칙
 - **`성적표/` 폴더는 실제 학생 개인정보다. 내용을 읽거나 출력하거나 외부로 보내지 않는다.** (.gitignore 처리됨)
-- **`lib/test/rls_verification_test.dart`는 원격 DB에 실제로 쓰므로 실행하지 않는다.** `tools/live_*` 테스트(예: `live_account_deletion_test.mjs`)도 원격 DB·외부 API를 쓰므로 사용자 승인 없이 실행하지 않는다.
+- **`lib/test/rls_verification_test.dart`는 원격 DB에 실제로 쓰므로 실행하지 않는다.** `tools/live_*`·`tools/ocr/live_*` 테스트(예: `live_account_deletion_test.mjs`, `ocr/live_report_browser.mjs`)도 원격 DB·외부 API를 쓰므로 사용자 승인 없이 실행하지 않는다.
 - `.env.dev.json`, `supabase/.env.local`의 키 값은 출력·로그·소스·문서·커밋에 넣지 않는다.
 - nearby_school_finder 프로젝트와 작업 공간 밖의 파일은 수정·이동·삭제하지 않는다.
 
@@ -27,8 +30,8 @@
 - 성적 계산은 검증 가능한 공식으로 구현한다. AI가 수치를 추정하지 않는다. 원본에 없는 값은 null로 둔다.
 - 모의고사 지표(표준점수·백분위·등급)를 내신 석차등급과 섞어 평균하지 않는다.
 - 모집요강·등록금에는 공식 출처, 학년도, 확인일, 검증 상태를 함께 기록한다.
-- 합격 가능성을 보장하거나 단정하지 않는다. 자료가 부족하면 "판단 불가·자료 부족"으로 표시한다.
-- 단계를 마치면 `DEVELOPMENT_LOG.md`에 다음 번호(현재 56 다음)로 기록하고, 필요하면 `docs/NEXT_STEPS.md`를 갱신한다.
+- 합격 가능성은 예측하되 보장·단정하지 않는다. 예측마다 비교한 과거 입결(학년도·지표·인원)·신뢰도·한계를 함께 보여 준다. 자료가 부족하면 "판단 불가·자료 부족"으로 표시한다.
+- 단계를 마치면 `DEVELOPMENT_LOG.md`에 다음 번호(현재 82 다음)로 기록하고, 필요하면 `docs/NEXT_STEPS.md`를 갱신한다.
 
 ## 실행·검증 명령
 ```powershell
@@ -49,6 +52,14 @@ flutter test --no-pub test lib/models/extraction_result_test.dart
 
 # 웹 빌드 확인
 flutter build web --no-pub --dart-define=DEMO_MODE=true
+
+# 진학 컨설팅 리포트 브라우저 점검 (가상 학생, DB·외부 호출 없음, 실제 번들 데이터 사용)
+flutter build web --no-pub -t tools/preview_report_web.dart -o build/report-preview
+node tools/ocr/report_smoke.mjs   # 스크린샷·인쇄 PDF: tools/ocr/test-output/design/report-*
+
+# ⚠ 로그인 경로 실제 점검: 개발 DB에 가상 계정·가상 성적을 쓰고 끝에 삭제한다. 사용자 승인 후에만 실행.
+flutter build web --no-pub --dart-define-from-file=.env.dev.json -o build/dev-check
+node tools/ocr/live_report_browser.mjs
 ```
 
 ## 폴더 구조
