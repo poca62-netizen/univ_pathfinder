@@ -8,6 +8,8 @@ import 'package:univ_pathfinder/screens/university_search_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:univ_pathfinder/services/csat_minimum_service.dart';
 import 'package:univ_pathfinder/services/yonsei_csat_conversion.dart';
+import 'package:univ_pathfinder/services/snu_csat_conversion.dart';
+import 'package:univ_pathfinder/services/percentile_csat_conversions.dart';
 import 'package:univ_pathfinder/services/admission_condition_store.dart';
 import 'package:univ_pathfinder/models/admission_catalog.dart';
 import 'package:univ_pathfinder/models/counseling_summary.dart';
@@ -1368,6 +1370,9 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
     final conversion = selected == null
         ? const <String, double>{}
         : yonseiCsatComponents(selected);
+    final snuConversion = selected == null
+        ? const <String, double>{}
+        : snuCsatComponents(selected);
     if (section?.failed == true) {
       return _notice('모의고사 조회 실패 · 수능 최저 준비도는 다시 조회한 뒤 확인하세요.');
     }
@@ -1404,27 +1409,121 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
           '처음에는 최신 시험을 선택합니다. 시험 간 최고 등급을 합치지 않으며 실제 수능 충족·합격 판정과 구분합니다.',
           style: TextStyle(fontSize: 12, height: 1.6),
         ),
-        ExpansionTile(
-          title: const Text('연세대 서울 정시 수능 환산 예시'),
-          children: [
-            const ListTile(
-              subtitle: Text(
-                '2028 시행계획 20·25쪽 · 선택한 모의고사의 수능 배점 예시. 한국사 감점을 반영한 수능 점수이며, 서류·면접 및 기타 감점은 합산하지 않습니다.',
-              ),
-            ),
-            if (conversion.isEmpty)
-              const ListTile(
-                subtitle: Text(
-                  '같은 시험의 국어·수학·통합사회·통합과학 표준점수와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
-                ),
-              ),
-            for (final entry in conversion.entries)
-              ListTile(
-                title: Text(entry.key),
-                trailing: Text(entry.value.toStringAsFixed(2)),
-              ),
-          ],
+        _conversionTile(
+          title: '연세대 서울 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 20·25쪽 · 선택한 모의고사의 수능 배점 예시. 한국사 감점을 반영한 수능 점수이며, 서류·면접 및 기타 감점은 합산하지 않습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 표준점수와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: conversion,
         ),
+        _conversionTile(
+          title: '서울대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 15·16·18쪽 · 1단계는 등급 환산(국어·수학·영어·한국사 각 1등급 10점~9등급 2점, 탐구는 통합사회·통합과학 평균), '
+              '2단계는 백분위 반영 비율과 영어 감점 후 ×60/300입니다. 교과역량평가·면접은 합산하지 않으며 실제 지원 모집단위의 반영 비율을 확인하세요.',
+          missing:
+              '같은 시험의 국어·수학·영어·한국사·통합사회·통합과학 등급(1단계)과 국어·수학·통합사회·통합과학 백분위(2단계)를 영역별 한 건씩 등록해 주세요.',
+          scores: snuConversion,
+        ),
+        _conversionTile(
+          title: '가톨릭대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 28–29쪽 · 백분위 활용 전형(의예·약학·간호학과 제외). 일반전형Ⅰ은 국어·수학 우수 순 40·20%, 영어 환산점수 20%, '
+              '통합사회·통합과학 상위 1과목 20%, 일반전형Ⅱ는 국어·수학 우수 1개 50%, 영어 20%, 탐구 30%이며 한국사 등급별 감점을 뺍니다. '
+              '원문에 총점 척도가 없어 반영 비율 그대로의 100점 기준 값입니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : catholicCsatComponents(selected),
+        ),
+        _conversionTile(
+          title: '인천대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 5·35–36쪽 · 국어·수학·탐구(사회·과학 상위 1과목) 백분위와 영어 등급별 점수(2028 변경표)로 계산한 1,000점 만점 점수입니다. '
+              '한국사는 반영하지 않으며 예체능 모집단위 산식은 제외했습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : incheonCsatComponents(selected),
+        ),
+        _conversionTile(
+          title: '상명대(서울) 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 27–28쪽 · 백분위×반영비율×10(인문 국35·수30·영25·탐10, 자연 국30·수35·영25·탐10), '
+              '영어 등급 점수, 탐구 상위 1과목(인문은 사회·자연은 과학탐구 5% 가산), 한국사 등급별 가산점. 원문 예시대로 소수점 셋째 자리까지 계산합니다. 예체능·실기 모집단위는 제외했습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : sangmyungCsatComponents(selected),
+        ),
+        _conversionTile(
+          title: '동덕여대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 37–38쪽 · 일반 모집단위는 국어·수학 우수 순 35·25%, 영어 등급 점수 20%, 탐구 1과목 20%, '
+              '약학과는 국25·수35·영20·과학탐구20%입니다. 총점 1,000점 기준으로 환산하고 한국사 가산점(최대 3점)을 별도로 더합니다. 예체능 모집단위는 제외했습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : dongdukCsatComponents(selected),
+        ),
+        _conversionTile(
+          title: '명지대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 40쪽 · 백분위, 총점 900점(인문 국35·수25, 경영 30·30, 자연 25·35, 영어·탐구 각 20%). '
+              '탐구는 계열에 맞는 탐구 10% 가산 후 상위 1과목, 한국사 가산점(3.0~1.4)을 총점 환산 뒤 더합니다. 실기 전형은 제외했습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : myongjiCsatComponents(selected),
+        ),
+        _conversionTile(
+          title: '삼육대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 8쪽 · 백분위, 국어·수학·영어 환산·탐구 1과목 중 우수한 4개 영역 순 35/25/25/15%(약학과는 국25·수35·영25·과탐15). '
+              '원문에 총점 척도가 없어 100점 기준 값이며 한국사는 반영하지 않습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : sahmyookCsatComponents(selected),
+        ),
+        _conversionTile(
+          title: '경기대 정시 수능 환산 예시',
+          note:
+              '2028 시행계획 30쪽 · 백분위(인문 등 국40·수25·영20·탐15, 소프트웨어경영·융합과학·창의공과 국30·수35·영20·탐15), '
+              '탐구 상위 1과목, 한국사 6등급부터 감점. 원문에 총점 척도가 없어 100점 기준 값입니다. 일반학생Ⅱ·실기 전형은 제외했습니다.',
+          missing:
+              '같은 시험의 국어·수학·통합사회·통합과학 백분위와 영어·한국사 등급을 영역별 한 건씩 등록해 주세요.',
+          scores: selected == null
+              ? const <String, double>{}
+              : kyonggiCsatComponents(selected),
+        ),
+      ],
+    );
+  }
+
+  Widget _conversionTile({
+    required String title,
+    required String note,
+    required String missing,
+    required Map<String, double> scores,
+  }) {
+    return ExpansionTile(
+      title: Text(title),
+      children: [
+        ListTile(subtitle: Text(note)),
+        if (scores.isEmpty) ListTile(subtitle: Text(missing)),
+        for (final entry in scores.entries)
+          ListTile(
+            title: Text(entry.key),
+            trailing: Text(entry.value.toStringAsFixed(2)),
+          ),
       ],
     );
   }
