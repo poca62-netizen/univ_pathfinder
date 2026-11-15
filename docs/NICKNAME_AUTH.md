@@ -10,7 +10,7 @@
 - 세션이나 개발 브라우저가 바뀌어도 같은 자격으로 다시 로그인하면 같은 사용자 ID로 연결된다. 홈에서 로그아웃할 수 있다.
 - 자동 비밀번호 복구·재설정과 닉네임 변경은 아직 제공하지 않는다.
 
-## 계정 삭제 (2026-11-15 구현, 원격 배포 전)
+## 계정 삭제 (2026-11-15 구현·배포)
 
 - 설정 → **계정 삭제**에서 4자리 비밀번호를 다시 입력하면 계정과 자료를 영구 삭제한다. 열린 브라우저를 다른 사람이 써도 PIN 없이는 지울 수 없다.
 - `delete-account` Edge Function 처리 순서:
@@ -23,7 +23,8 @@
 - 오류 코드: `AUTH`(401), `INPUT`(400), `INVALID_CREDENTIALS`(401), `LOCKED`·`RATE_LIMIT`(429), `NO_NICKNAME_ACCOUNT`(409, 닉네임 자격 없는 옛 익명 계정), `UNAVAILABLE`(503).
 - 앱은 서버가 `{deleted: true}`를 돌려준 뒤에만 이 브라우저의 계정별 키 4종(`university_selection_v1`, `consulting_draft_v1`, `admission_conditions_v1`, `comparison_history_v1`)을 지우고 로컬 로그아웃 후 시작 화면으로 이동한다. 다른 기기의 브라우저 기록은 지우지 못한다.
 - 삭제 후 같은 닉네임은 즉시 다시 가입할 수 있다.
-- 배포(승인 후): `npx supabase functions deploy delete-account --project-ref <프로젝트ID> --no-verify-jwt` — 세션 검증은 함수 안에서 한다(`commute-times`와 같은 방식).
+- 배포: `npx supabase functions deploy delete-account --remote=<프로젝트ID> --no-verify-jwt` — 세션 검증은 함수 안에서 한다(`commute-times`와 같은 방식). 2026-11-15 현재 앱 프로젝트(production)에 배포했다.
+- 원격 검증: `node tools/live_account_deletion_test.mjs`(명시적 승인 후에만 실행). 무작위 `test_` 가상 계정으로 세션 없음 401, PIN 형식 오류 400, 틀린 PIN 401(자료 유지), 올바른 PIN 삭제 후 Auth 사용자·프로필·모의고사 행·닉네임 자격·실패 기록이 모두 0건, 이전 세션 재삭제 거부, 같은 닉네임 재가입을 확인한다. 행 수는 `supabase db query --read-only`로 센다(user 데이터 테이블은 service_role에 조회 권한이 없음). 생성한 계정은 실패해도 정리한다. 2026-11-15 통과, 잔여 테스트 계정 0건 확인.
 
 ## 서버 계약
 

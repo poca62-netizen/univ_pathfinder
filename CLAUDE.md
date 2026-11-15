@@ -7,7 +7,7 @@
 
 ## 절대 규칙
 - **`성적표/` 폴더는 실제 학생 개인정보다. 내용을 읽거나 출력하거나 외부로 보내지 않는다.** (.gitignore 처리됨)
-- **`lib/test/rls_verification_test.dart`는 원격 DB에 실제로 쓰므로 실행하지 않는다.** `tools/live_*` 테스트도 원격 DB·외부 API를 쓰므로 사용자 승인 없이 실행하지 않는다.
+- **`lib/test/rls_verification_test.dart`는 원격 DB에 실제로 쓰므로 실행하지 않는다.** `tools/live_*` 테스트(예: `live_account_deletion_test.mjs`)도 원격 DB·외부 API를 쓰므로 사용자 승인 없이 실행하지 않는다.
 - `.env.dev.json`, `supabase/.env.local`의 키 값은 출력·로그·소스·문서·커밋에 넣지 않는다.
 - nearby_school_finder 프로젝트와 작업 공간 밖의 파일은 수정·이동·삭제하지 않는다.
 
