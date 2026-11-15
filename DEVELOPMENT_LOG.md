@@ -826,3 +826,11 @@ flutter run -d chrome --dart-define-from-file=.env.dev.json
 - 대학 추천의 모의고사 선택에 연세대 서울 2028 정시 일반계열 유형 I·II·III와 의예과 수능 반영점수 예시를 추가했다. 같은 시험의 표준점수·등급만 사용하며 서류·면접과 감점은 제외한다. 근거는 공식 시행계획 20·25쪽이다.
 - 인공지능·소프트웨어·데이터과학의 관련 학과명과 생기부 표현을 기존 분야 매칭에 추가했다.
 - 대학 추천 및 수능 최저 화면 기존 테스트 9개 통과. 추가 대학 공식 산식과 복합 최저 규칙은 후속이다.
+
+# 57. 계정 삭제 (2026-11-15)
+
+- 개발 도구를 Claude Code로 전환했다. `.clinerules` 규칙을 `CLAUDE.md`로 옮기고 PRD를 실제 구현에 맞게 개정했다(태그 `v0.1.0-dev.2` 이후 커밋).
+- PRD F13 보완. 설정 화면에 계정 삭제 영역과 PIN 재입력 확인 창을 추가했다. 새 Edge Function `supabase/functions/delete-account`가 세션 사용자 확인 → 요청 제한 → 서버 측 닉네임 조회 → PIN 재검증(기존 잠금 규칙 적용) → Auth 사용자 삭제 순서로 처리한다. 성적·모의고사·생기부·닉네임 자격은 기존 `on delete cascade`로 함께 삭제되므로 새 SQL은 없다. 로그인 실패 기록의 닉네임 행도 정리해 닉네임을 즉시 재사용할 수 있다.
+- 앱(`lib/services/account_deletion_service.dart`)은 서버 삭제 확인 후에만 이 브라우저의 계정별 저장 키 4종을 지우고 로컬 로그아웃한다. 로컬 정리 실패는 이미 끝난 서버 삭제를 실패로 표시하지 않는다. 서버 실패 시 세션과 로컬 기록을 유지하고 오류별 안내를 표시한다.
+- 검증: 신규 `test/account_deletion_test.dart` 7개 포함 전체 Flutter 184개 통과, `dart analyze lib test` 문제 없음. `flutter analyze`는 한글 경로 때문에 분석 서버가 크래시하므로 `dart analyze`로 대체했다. Deno가 없어 Edge Function의 로컬 타입 검사는 하지 못했다.
+- 원격 배포·가상 계정 실삭제 검증·커밋 push는 수행하지 않았다(사용자 승인 대기).

@@ -10,6 +10,21 @@
 - 세션이나 개발 브라우저가 바뀌어도 같은 자격으로 다시 로그인하면 같은 사용자 ID로 연결된다. 홈에서 로그아웃할 수 있다.
 - 자동 비밀번호 복구·재설정과 닉네임 변경은 아직 제공하지 않는다.
 
+## 계정 삭제 (2026-11-15 구현, 원격 배포 전)
+
+- 설정 → **계정 삭제**에서 4자리 비밀번호를 다시 입력하면 계정과 자료를 영구 삭제한다. 열린 브라우저를 다른 사람이 써도 PIN 없이는 지울 수 없다.
+- `delete-account` Edge Function 처리 순서:
+  1. `/auth/v1/user`로 요청한 세션의 사용자 ID를 확인한다. 요청 본문의 사용자 정보는 신뢰하지 않는다.
+  2. IP 해시별 요청 제한을 적용한다(`nickname-auth`와 같은 버킷).
+  3. 서버에서 그 사용자 ID의 `nickname_accounts.nickname_key`를 조회한다.
+  4. `authenticate_nickname`으로 PIN을 검증한다. 결과 user_id가 세션 사용자와 같아야 한다. 실패는 기존 5회 잠금에 포함된다.
+  5. 관리자 API로 Auth 사용자를 삭제한다. `profiles`, `grade_records`, `mock_exam_records`, `school_record_evidence`, `nickname_accounts`가 `on delete cascade`로 함께 삭제된다.
+  6. `nickname_login_attempts`의 해당 닉네임 행을 지운다(실패해도 삭제 결과는 유지).
+- 오류 코드: `AUTH`(401), `INPUT`(400), `INVALID_CREDENTIALS`(401), `LOCKED`·`RATE_LIMIT`(429), `NO_NICKNAME_ACCOUNT`(409, 닉네임 자격 없는 옛 익명 계정), `UNAVAILABLE`(503).
+- 앱은 서버가 `{deleted: true}`를 돌려준 뒤에만 이 브라우저의 계정별 키 4종(`university_selection_v1`, `consulting_draft_v1`, `admission_conditions_v1`, `comparison_history_v1`)을 지우고 로컬 로그아웃 후 시작 화면으로 이동한다. 다른 기기의 브라우저 기록은 지우지 못한다.
+- 삭제 후 같은 닉네임은 즉시 다시 가입할 수 있다.
+- 배포(승인 후): `npx supabase functions deploy delete-account --project-ref <프로젝트ID> --no-verify-jwt` — 세션 검증은 함수 안에서 한다(`commute-times`와 같은 방식).
+
 ## 서버 계약
 
 `005_nickname_auth.sql`과 `nickname-auth` Edge Function을 함께 사용한다. 함수는 인증 전 진입점이므로 게이트웨이 JWT 검사를 끄고 배포하며, 성적 서비스와 RLS는 기존 Supabase Auth 사용자 ID 기준을 유지한다.

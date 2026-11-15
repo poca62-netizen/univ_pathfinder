@@ -67,7 +67,7 @@ assets/data/             2028 전형계획·입결 비교·등록금 JSON 번들
 assets/samples/          가상 성적표 PDF
 web/                     index.html, grade_ocr.js·kakao_map.js 등 JS 브리지, vendor/ocr(PDF.js·Tesseract 정적 파일)
 supabase/sql/            DB 마이그레이션 001~007 (순서대로 적용)
-supabase/functions/      Edge Functions: nickname-auth, nemotron-ocr, commute-times
+supabase/functions/      Edge Functions: nickname-auth, nemotron-ocr, commute-times, delete-account
 tools/                   데이터 빌드 스크립트(*.mjs), live_* 원격 검증, ocr/ 브라우저 스모크 테스트
 docs/                    기능별 설계·제한 문서 (NEXT_STEPS.md = 다음 개발 순서)
 성적표/                  ⛔ 실제 개인정보 — 접근 금지

@@ -4,10 +4,21 @@ import 'package:univ_pathfinder/screens/counseling_documents_screen.dart';
 import 'package:univ_pathfinder/widgets/university_selection_controls.dart';
 import 'package:univ_pathfinder/models/counseling_session.dart';
 import 'package:univ_pathfinder/screens/university_compare_screen.dart';
+import 'package:univ_pathfinder/screens/start_screen.dart';
+import 'package:univ_pathfinder/services/account_deletion_service.dart';
+import 'package:univ_pathfinder/services/nickname_auth_service.dart';
 
+/// Reachable only when signed in (home hides the settings button in demo mode).
 class FavoritesSettingsScreen extends StatefulWidget {
-  const FavoritesSettingsScreen({super.key, this.nickname});
+  const FavoritesSettingsScreen({
+    super.key,
+    this.nickname,
+    this.accountDeletion,
+  });
   final String? nickname;
+
+  /// Injected in tests; defaults to the real service.
+  final AccountDeletionService? accountDeletion;
 
   @override
   State<FavoritesSettingsScreen> createState() =>
@@ -75,6 +86,26 @@ class _FavoritesSettingsScreenState extends State<FavoritesSettingsScreen> {
     } finally {
       if (mounted) setState(() => _deleting = false);
     }
+  }
+
+  Future<void> _deleteAccount() async {
+    final deleted = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AccountDeletionDialog(
+        service: widget.accountDeletion ?? AccountDeletionService(),
+      ),
+    );
+    if (deleted != true || !mounted) return;
+    CounselingSession.instance.clear();
+    final messenger = ScaffoldMessenger.of(context);
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const StartScreen()),
+      (_) => false,
+    );
+    messenger.showSnackBar(
+      const SnackBar(content: Text('계정과 모든 자료를 삭제했습니다.')),
+    );
   }
 
   @override
@@ -168,10 +199,140 @@ class _FavoritesSettingsScreenState extends State<FavoritesSettingsScreen> {
                   ),
                   label: const Text('새 학업 자료 등록'),
                 ),
+              const SizedBox(height: 32),
+              const Divider(),
+              const SizedBox(height: 8),
+              Text(
+                '계정 삭제',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '닉네임 계정과 내신·모의고사·생활기록부 자료를 서버에서 영구 삭제하고, 이 브라우저에 저장한 관심 대학·상담 준비·비교 기록도 지웁니다. 되돌릴 수 없습니다.',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                onPressed: _deleting ? null : _deleteAccount,
+                icon: const Icon(Icons.person_remove_outlined),
+                label: const Text('계정 삭제'),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Asks for the PIN and runs the deletion; pops `true` only after the server confirmed it.
+class AccountDeletionDialog extends StatefulWidget {
+  const AccountDeletionDialog({super.key, required this.service});
+  final AccountDeletionService service;
+
+  @override
+  State<AccountDeletionDialog> createState() => _AccountDeletionDialogState();
+}
+
+class _AccountDeletionDialogState extends State<AccountDeletionDialog> {
+  final _pin = TextEditingController();
+  bool _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _pin.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final error = NicknameAuthService.validatePin(_pin.text);
+    if (error != null) {
+      setState(() => _error = error);
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await widget.service.deleteAccount(_pin.text);
+      if (mounted) Navigator.of(context).pop(true);
+    } on NicknameAuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _error = e.message;
+          _pin.clear();
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final error = Theme.of(context).colorScheme.error;
+    return AlertDialog(
+      title: const Text('계정을 삭제할까요?'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('다음 자료가 영구 삭제되며 되돌릴 수 없습니다.'),
+            const SizedBox(height: 8),
+            const Text(
+              '• 닉네임 계정과 비밀번호\n'
+              '• 내신·모의고사 성적, 생활기록부 근거\n'
+              '• 이 브라우저의 관심 대학·상담 준비·지원조건 확인·비교 기록',
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '삭제 후 같은 닉네임은 누구나 새로 가입할 수 있습니다. 다른 기기의 브라우저에 남은 기록은 그 기기에서 직접 지워야 합니다.',
+              style: TextStyle(fontSize: 13),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              key: const Key('account-deletion-pin'),
+              controller: _pin,
+              enabled: !_busy,
+              obscureText: true,
+              keyboardType: TextInputType.number,
+              maxLength: 4,
+              decoration: const InputDecoration(
+                labelText: '본인 확인: 숫자 4자리 비밀번호',
+                counterText: '',
+              ),
+              onSubmitted: (_) {
+                if (!_busy) _submit();
+              },
+            ),
+            if (_error != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(_error!, style: TextStyle(color: error)),
+              ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _busy ? null : () => Navigator.of(context).pop(false),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(backgroundColor: error),
+          onPressed: _busy ? null : _submit,
+          child: Text(_busy ? '삭제 중…' : '계정 영구 삭제'),
+        ),
+      ],
     );
   }
 }
