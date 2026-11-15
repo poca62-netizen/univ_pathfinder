@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:univ_pathfinder/models/admission_catalog.dart';
 import 'package:univ_pathfinder/services/kakao_map.dart';
 
-const _plans2028 = {
+/// Official 2028 admission-plan pages checked on 2026-11-06 (also listed on the data-sources screen).
+const officialPlanLinks2028 = {
   '서울대': 'https://admission.snu.ac.kr/undergraduate/notice?bbsidx=168854&md=v',
   '연세대(서울)': 'https://admission.yonsei.ac.kr/seoul/admission/html/counsel/noticeView.asp?BBS_NO=3493',
   '고려대(서울)': 'https://oku.korea.ac.kr/oku/cms/FR_BBS_CON/BoardView.do?BBS_SEQ=1791&BOARD_SEQ=5&CONTENTS_NO=1&MENU_ID=750&SITE_NO=2',
@@ -56,7 +57,7 @@ class OfficialAdmissionSource extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final source = year == 2028 ? _plans2028[university] : null;
+    final source = year == 2028 ? officialPlanLinks2028[university] : null;
     if (source == null) return const Text('대학별 공식 원문 링크 미확인');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

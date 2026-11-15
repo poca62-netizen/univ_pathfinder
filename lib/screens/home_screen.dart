@@ -6,6 +6,8 @@ import 'package:univ_pathfinder/screens/consulting_screen.dart';
 import 'package:univ_pathfinder/screens/university_recommendation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:univ_pathfinder/screens/university_map_screen.dart';
+import 'package:univ_pathfinder/screens/data_sources_screen.dart';
+import 'package:univ_pathfinder/screens/consulting_report_screen.dart';
 import 'package:univ_pathfinder/screens/grade_upload_selector_screen.dart';
 import 'package:univ_pathfinder/screens/grade_analysis_screen.dart';
 import 'package:univ_pathfinder/screens/university_search_screen.dart';
@@ -91,6 +93,18 @@ class HomeScreen extends StatelessWidget {
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     children: [
+                      if (!demoMode)
+                        _menuCard(
+                          context,
+                          title: '진학 컨설팅 리포트',
+                          icon: Icons.analytics_outlined,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ConsultingReportScreen(),
+                            ),
+                          ),
+                        ),
                       if (!demoMode)
                         _menuCard(
                           context,
@@ -192,6 +206,17 @@ class HomeScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (_) => const UniversityMapScreen(),
+                          ),
+                        ),
+                      ),
+                      _menuCard(
+                        context,
+                        title: '자료 출처',
+                        icon: Icons.fact_check_outlined,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DataSourcesScreen(),
                           ),
                         ),
                       ),

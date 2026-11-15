@@ -7,7 +7,9 @@ globalThis.univKakaoOpenDirections = raw => {
 };
 globalThis.univOpenAdmissionSource = raw => {
   const url = new URL(raw);
-  const hosts = ['admission.snu.ac.kr', 'admission.yonsei.ac.kr', 'oku.korea.ac.kr', 'iphak.khu.ac.kr', 'iphak.ssu.ac.kr'];
+  const hosts = ['admission.snu.ac.kr', 'admission.yonsei.ac.kr', 'oku.korea.ac.kr', 'iphak.khu.ac.kr', 'iphak.ssu.ac.kr',
+    // Public data sources listed on the in-app data-sources screen.
+    'www.adiga.kr', 'www.data.go.kr', 'www.kcue.or.kr', 'www.pen.go.kr', 'cheongun-h.goeyp.kr', 'jinhak.jje.go.kr'];
   if (url.protocol !== 'https:' || !hosts.includes(url.hostname)) return false;
   return openExternalTab(url);
 };

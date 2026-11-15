@@ -58,6 +58,8 @@ flutter:
     - assets/data/admissions_2028.json
     - assets/data/tuition.json
     - assets/data/admission_comparison.json
+    - assets/data/admission_results.json
+    - assets/data/admission_aliases.json
     - assets/samples/sample_grades.pdf
 
   # To add assets to your application, add an assets section, like this:
