@@ -56,8 +56,7 @@ class _GradeUploadState extends State<GradeUploadScreen> {
         builder: (dialogContext) => AlertDialog(
           title: const Text('성적 저장 확인'),
           content: SingleChildScrollView(child: Text(
-            '$_year학년 $_semester학기\n' +
-            _fields.keys.map((key) => '$key: ${_text(key).isEmpty ? "-" : _text(key)}').join('\n'))),
+            '$_year학년 $_semester학기\n${_fields.keys.map((key) => '$key: ${_text(key).isEmpty ? "-" : _text(key)}').join('\n')}')),
           actions: [
             TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('취소')),
             FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('저장')),

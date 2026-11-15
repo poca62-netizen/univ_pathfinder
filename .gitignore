@@ -48,3 +48,8 @@ app.*.map.json
 .widget_preview/
 
 .env.dev.json
+node_modules/
+tools/ocr/test-output/
+/성적표/
+supabase/.env.local
+supabase/.temp/

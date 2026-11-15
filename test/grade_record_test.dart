@@ -15,7 +15,13 @@ void main() {
         'subject_average': 80.0,
         'achievement': 'A',
         'grade_rank': 2,
-        'achievement_distribution': {'A': 40, 'B': 30, 'C': 20, 'D': 10, 'E': 0},
+        'achievement_distribution': {
+          'A': 40,
+          'B': 30,
+          'C': 20,
+          'D': 10,
+          'E': 0,
+        },
         'created_at': '2025-01-01T00:00:00Z',
         'updated_at': '2025-01-01T00:00:00Z',
       };

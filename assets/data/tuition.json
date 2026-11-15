@@ -1,0 +1,647 @@
+{
+  "source": "한국장학재단 · 전국대학별평균등록금정보표준데이터",
+  "sourceUrl": "https://www.data.go.kr/data/15107738/standard.do",
+  "note": "학과별 고지액·2028 확정액·장학금 차감 후 실부담액이 아님",
+  "rows": [
+    {
+      "university": "가톨릭대",
+      "officialName": "가톨릭대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7725223,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "가톨릭대",
+      "officialName": "가톨릭대학교",
+      "campus": "제3캠퍼",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 6630000,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "가톨릭대",
+      "officialName": "가톨릭대학교",
+      "campus": "제2캠퍼",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9999517.1,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "건국대(서울)",
+      "officialName": "건국대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8985986.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "경희대",
+      "officialName": "경희대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8699742,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "고려대(서울)",
+      "officialName": "고려대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9091429.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "광운대",
+      "officialName": "광운대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8595586.5,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "국민대",
+      "officialName": "국민대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8616796.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "덕성여대",
+      "officialName": "덕성여자대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7810760.7,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "동국대(서울)",
+      "officialName": "동국대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8656274.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "동덕여대",
+      "officialName": "동덕여자대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8126346.6,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "명지대",
+      "officialName": "명지대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9829417.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "명지대",
+      "officialName": "명지대학교",
+      "campus": "제2캠퍼",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7737615.2,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "삼육대",
+      "officialName": "삼육대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8537542.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "상명대(서울)",
+      "officialName": "상명대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8417417.1,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서강대",
+      "officialName": "서강대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8698676.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서경대",
+      "officialName": "서경대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8688695.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서울과기대",
+      "officialName": "서울과학기술대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 5494477.2,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서울대",
+      "officialName": "서울대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 6091815.7,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서울시립대",
+      "officialName": "서울시립대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 2530265.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서울여대",
+      "officialName": "서울여자대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8244464.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "성균관대",
+      "officialName": "성균관대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9145523.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "성신여대",
+      "officialName": "성신여자대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8437832.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "세종대",
+      "officialName": "세종대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8651037.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "숙명여대",
+      "officialName": "숙명여자대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8825485.2,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "숭실대",
+      "officialName": "숭실대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8643438.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "연세대(서울)",
+      "officialName": "연세대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9957805.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "이화여대",
+      "officialName": "이화여자대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9311388,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "중앙대",
+      "officialName": "중앙대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8587181.5,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "중앙대",
+      "officialName": "중앙대학교",
+      "campus": "제2캠퍼",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9386994.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한국외대(서울)",
+      "officialName": "한국외국어대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7791804,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한국외대(글로벌)",
+      "officialName": "한국외국어대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7791804,
+      "scope": "학교 본교 공시 참고 · 글로벌 캠퍼스 미분리"
+    },
+    {
+      "university": "한성대",
+      "officialName": "한성대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8033733,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한양대(서울)",
+      "officialName": "한양대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9289910.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "홍익대(서울)",
+      "officialName": "홍익대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9101269.7,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "가천대",
+      "officialName": "가천대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9094425.6,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "강남대",
+      "officialName": "강남대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8206173.1,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "경기대",
+      "officialName": "경기대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8028841.1,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "경기대",
+      "officialName": "경기대학교",
+      "campus": "제2캠퍼",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7800638,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "단국대(죽전)",
+      "officialName": "단국대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8756933.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "대진대",
+      "officialName": "대진대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8246988.5,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "성결대",
+      "officialName": "성결대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7857086.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "수원대",
+      "officialName": "수원대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8195102.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "신한대",
+      "officialName": "신한대학교",
+      "campus": "제2캠퍼",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9156576.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "신한대",
+      "officialName": "신한대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9568571.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "아주대",
+      "officialName": "아주대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9093154.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "안양대",
+      "officialName": "안양대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8261377.2,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "안양대",
+      "officialName": "안양대학교",
+      "campus": "제2캠퍼",
+      "region": "인천광역시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9105397.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "용인대",
+      "officialName": "용인대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8424516.6,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "을지대",
+      "officialName": "을지대학교",
+      "campus": "본교",
+      "region": "대전광역시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 11280388.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "을지대",
+      "officialName": "을지대학교",
+      "campus": "제2캠퍼",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9079638.6,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "을지대",
+      "officialName": "을지대학교",
+      "campus": "제3캠퍼",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8984798.6,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "인천대",
+      "officialName": "인천대학교",
+      "campus": "본교",
+      "region": "인천광역시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 4650414.5,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "인하대",
+      "officialName": "인하대학교",
+      "campus": "본교",
+      "region": "인천광역시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8490347.9,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "차의과학대",
+      "officialName": "차의과학대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7762597.4,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한경대",
+      "officialName": "한경국립대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 4021297,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한국공학대",
+      "officialName": "한국공학대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9449101.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한국항공대",
+      "officialName": "한국항공대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9210265.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한세대",
+      "officialName": "한세대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8859564.3,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한신대",
+      "officialName": "한신대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 7892204.1,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "한양대(ERICA)",
+      "officialName": "한양대학교(ERICA)",
+      "campus": "분교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 9281769.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "협성대",
+      "officialName": "협성대학교",
+      "campus": "본교",
+      "region": "경기도",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 8135252.7,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "경인교대",
+      "officialName": "경인교육대학교",
+      "campus": "본교",
+      "region": "인천광역시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 3493348.8,
+      "scope": "공시 본분교별 학부 연간 평균"
+    },
+    {
+      "university": "서울교대",
+      "officialName": "서울교육대학교",
+      "campus": "본교",
+      "region": "서울특별시",
+      "year": 2026,
+      "asOf": "2026-05-19",
+      "annualWon": 3256000,
+      "scope": "공시 본분교별 학부 연간 평균"
+    }
+  ]
+}
