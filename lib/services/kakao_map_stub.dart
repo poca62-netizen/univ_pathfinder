@@ -12,9 +12,11 @@ class KakaoMapView extends StatelessWidget {
     super.key,
     required this.origin,
     required this.destinations,
+    this.universities,
   });
   final MapLocation? origin;
   final List<MapDestination> destinations;
+  final UniversityLayer? universities;
   @override
   Widget build(BuildContext context) =>
       const Center(child: Text('카카오 지도는 웹 버전에서 사용할 수 있습니다.'));

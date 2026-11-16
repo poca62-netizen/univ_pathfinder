@@ -34,6 +34,13 @@ external JSPromise<JSAny?> _create(JSObject element, JSString key);
 external void _render(JSObject element, JSString state);
 @JS('univKakaoDispose')
 external void _dispose(JSObject element);
+@JS('univKakaoCampuses')
+external void _campuses(
+  JSObject element,
+  JSBoolean enabled,
+  JSFunction onFound,
+  JSFunction onTap,
+);
 
 String _message(Object error) => error.toString().contains('KEY_MISSING')
     ? '카카오 JavaScript 키가 없습니다. 개발 설정을 적용해 앱을 다시 실행하세요.'
@@ -62,9 +69,13 @@ class KakaoMapView extends StatefulWidget {
     super.key,
     required this.origin,
     required this.destinations,
+    this.universities,
   });
   final MapLocation? origin;
   final List<MapDestination> destinations;
+
+  /// 지도 영역의 대학 표시(켜면 현재 영역을 검색하고, 지도를 옮기면 '현 지도에서 검색' 버튼이 나온다).
+  final UniversityLayer? universities;
   @override
   State<KakaoMapView> createState() => _KakaoMapViewState();
 }
@@ -74,6 +85,26 @@ class _KakaoMapViewState extends State<KakaoMapView> {
   bool _ready = false;
   String? _error;
   int _attempt = 0;
+  late final JSFunction _onCampuses = ((JSString raw) {
+    try {
+      widget.universities?.onFound(
+        CampusSearchResult.fromJson(
+          jsonDecode(raw.toDart) as Map<String, dynamic>,
+        ),
+      );
+    } catch (_) {
+      widget.universities?.onFound(const CampusSearchResult(failed: true));
+    }
+  }).toJS;
+  late final JSFunction _onCampusTap = ((JSString raw) {
+    try {
+      widget.universities?.onTap(
+        MapLocation.fromJson(jsonDecode(raw.toDart) as Map<String, dynamic>),
+      );
+    } catch (_) {
+      /* 잘못된 장소 정보는 무시한다. */
+    }
+  }).toJS;
   Future<void> _initialize(Object element) async {
     final target = element as JSObject;
     _element = target;
@@ -109,7 +140,25 @@ class _KakaoMapViewState extends State<KakaoMapView> {
         ).map((c) => c.toJson()).toList(),
       }).toJS,
     );
+    final visible = widget.universities?.visible ?? false;
+    try {
+      _campuses(_element!, visible.toJS, _onCampuses, _onCampusTap);
+      _staleReported = false;
+    } catch (_) {
+      // 브라우저가 예전 kakao_map.js를 캐시해 함수가 없을 때: 지도는 그대로 두고 대학 표시만 실패로 알린다.
+      // 결과 보고가 다시 그리기를 부르므로 켤 때 한 번만, 그리기가 끝난 뒤 알린다.
+      if (visible && !_staleReported) {
+        _staleReported = true;
+        final layer = widget.universities;
+        Future.microtask(
+          () => layer?.onFound(const CampusSearchResult(needsReload: true)),
+        );
+      }
+      if (!visible) _staleReported = false;
+    }
   }
+
+  bool _staleReported = false;
 
   @override
   void didUpdateWidget(covariant KakaoMapView oldWidget) {

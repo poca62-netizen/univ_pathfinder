@@ -85,9 +85,130 @@ globalThis.univKakaoCreate = async (element, key) => {
   });
   const map = new maps.Map(element, {center: new maps.LatLng(37.5665, 126.978), level: 8});
   map.addControl(new maps.ZoomControl(), maps.ControlPosition.RIGHT);
-  const view = {map, maps, overlays: [], state: null};
-  const observer = new ResizeObserver(() => { map.relayout(); if (view.bounds) map.setBounds(view.bounds, 45, 50, 60, 50); });
+  const view = {map, maps, overlays: [], state: null, programmatic: false, element};
+  const observer = new ResizeObserver(() => { map.relayout(); if (view.bounds) fit(view); });
   observer.observe(element); view.observer = observer; views.set(element, view);
+  // 사용자가 지도를 옮기거나 확대·축소했을 때만 '현 지도에서 검색'을 보인다(앱이 맞춘 이동은 제외).
+  maps.event.addListener(map, 'dragend', () => campusMoved(view));
+  maps.event.addListener(map, 'zoom_changed', () => { if (!view.programmatic) campusMoved(view); });
+  maps.event.addListener(map, 'idle', () => { view.programmatic = false; });
+};
+
+function fit(view) {
+  view.programmatic = true;
+  view.map.setBounds(view.bounds, 45, 50, 60, 50);
+}
+
+// ---- 지도 영역의 대학 표시 (카카오 장소 카테고리 SC4=학교 중 대학교만) ----
+const CAMPUS_MAX_LEVEL = 9; // 이보다 넓게 보면 결과가 잘려 의미가 없어 확대를 안내한다.
+const CAMPUS_COLOR = '#6a3fb5';
+
+function campusButton(view) {
+  const c = view.campus;
+  if (c.button) return c.button;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = '↻ 현 지도에서 검색';
+  Object.assign(button.style, {position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'none', padding: '8px 14px', border: 'none', borderRadius: '18px', background: CAMPUS_COLOR, color: 'white', font: 'bold 13px sans-serif', boxShadow: '0 2px 6px #0006', cursor: 'pointer'});
+  // 카카오 지도가 끌기 처리를 위해 마우스·터치 입력을 가져가지 않게 버튼에서 멈춘다.
+  for (const type of ['mousedown', 'mouseup', 'pointerdown', 'pointerup', 'touchstart', 'touchend', 'dblclick', 'wheel']) {
+    button.addEventListener(type, e => e.stopPropagation());
+  }
+  button.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); searchCampuses(view); });
+  if (getComputedStyle(view.element).position === 'static') view.element.style.position = 'relative';
+  view.element.append(button);
+  c.button = button;
+  return button;
+}
+
+function campusMoved(view) {
+  if (view.campus?.on) campusButton(view).style.display = 'block';
+}
+
+function clearCampuses(view) {
+  for (const o of view.campus?.overlays ?? []) o.setMap(null);
+  if (view.campus) view.campus.overlays = [];
+}
+
+// 대학 건물·단과대학처럼 같은 대학의 하위 장소는 빼고 캠퍼스 대표 장소만 남긴다.
+function campusPlaces(raw) {
+  const kept = [];
+  for (const p of raw) {
+    const category = p.category_name || '';
+    if (!/대학교$|전문대학$/.test(category.trim())) continue;
+    kept.push({id: `place:${p.id}`, name: p.place_name, address: p.road_address_name || p.address_name || '', category, latitude: Number(p.y), longitude: Number(p.x)});
+  }
+  const names = kept.map(p => p.name);
+  return kept.filter(p => Number.isFinite(p.latitude) && Number.isFinite(p.longitude) &&
+    !names.some(n => n !== p.name && p.name.startsWith(`${n} `)));
+}
+
+async function searchCampuses(view) {
+  const c = view.campus;
+  const token = ++c.token;
+  try {
+    await searchCampusesNow(view, token);
+  } catch (error) {
+    // 어떤 이유로든 실패하면 화면이 '검색 중'에 멈추지 않게 실패를 알린다.
+    console.error('univKakaoCampuses', error);
+    if (token === c.token && c.on) c.onFound?.(JSON.stringify({places: [], failed: true, tooWide: false, truncated: false}));
+  }
+}
+
+async function searchCampusesNow(view, token) {
+  const c = view.campus, {map, maps} = view;
+  campusButton(view).style.display = 'none';
+  clearCampuses(view);
+  c.onFound?.(JSON.stringify({places: [], searching: true}));
+  if (map.getLevel() > CAMPUS_MAX_LEVEL) {
+    c.onFound?.(JSON.stringify({places: [], failed: false, tooWide: true, truncated: false}));
+    return;
+  }
+  const result = await new Promise(resolve => {
+    const out = [];
+    const timer = setTimeout(() => resolve({out, failed: true}), 12000);
+    new maps.services.Places(map).categorySearch('SC4', (data, status, pagination) => {
+      if (status === maps.services.Status.OK) {
+        out.push(...data);
+        if (pagination?.hasNextPage) { pagination.nextPage(); return; } // 카카오는 최대 3쪽(45곳)
+      }
+      clearTimeout(timer);
+      resolve({out, failed: status !== maps.services.Status.OK && status !== maps.services.Status.ZERO_RESULT});
+    }, {useMapBounds: true});
+  });
+  if (token !== c.token || !c.on) return; // 그 사이 끄거나 다시 검색함
+  const places = campusPlaces(result.out);
+  for (const place of places) {
+    const content = document.createElement('button');
+    content.type = 'button';
+    // 장소 이름을 HTML로 넣지 않는다.
+    content.textContent = `🎓 ${place.name}`;
+    Object.assign(content.style, {padding: '4px 8px', border: `2px solid ${CAMPUS_COLOR}`, borderRadius: '12px', background: 'white', color: CAMPUS_COLOR, font: 'bold 11px sans-serif', whiteSpace: 'nowrap', boxShadow: '0 1px 4px #0004', cursor: 'pointer'});
+    for (const type of ['mousedown', 'pointerdown', 'touchstart']) content.addEventListener(type, e => e.stopPropagation());
+    content.addEventListener('click', e => { e.stopPropagation(); c.onTap?.(JSON.stringify(place)); });
+    const overlay = new maps.CustomOverlay({position: new maps.LatLng(place.latitude, place.longitude), content, yAnchor: 1.2, zIndex: 2, clickable: true});
+    overlay.setMap(map);
+    c.overlays.push(overlay);
+  }
+  c.onFound?.(JSON.stringify({places, failed: result.failed, tooWide: false, truncated: result.out.length >= 45}));
+}
+
+globalThis.univKakaoCampuses = (element, enabled, onFound, onTap) => {
+  const view = views.get(element);
+  if (!view) return;
+  const c = view.campus ??= {on: false, overlays: [], token: 0, button: null};
+  c.onFound = raw => onFound(raw);
+  c.onTap = raw => onTap(raw);
+  if (!enabled) {
+    if (!c.on) return;
+    c.on = false; c.token++;
+    clearCampuses(view);
+    if (c.button) c.button.style.display = 'none';
+    return;
+  }
+  if (c.on) return; // 켜진 상태에서 다시 그릴 때는 검색을 반복하지 않는다.
+  c.on = true;
+  searchCampuses(view);
 };
 
 function label(maps, place, text, color, zIndex, origin = false) {
@@ -126,13 +247,14 @@ globalThis.univKakaoRender = (element, raw) => {
   }
   view.bounds = count ? bounds : null;
   map.relayout();
-  if (count === 1) { map.setCenter(bounds.getSouthWest()); map.setLevel(5); }
-  else if (count > 1) map.setBounds(bounds, 45, 50, 60, 50);
+  if (count === 1) { view.programmatic = true; map.setCenter(bounds.getSouthWest()); map.setLevel(5); }
+  else if (count > 1) fit(view);
 };
 globalThis.univKakaoDispose = element => {
   const view = views.get(element);
   if (!view) return;
   view.observer.disconnect();
   for (const overlay of view.overlays) overlay.setMap(null);
+  if (view.campus) { view.campus.on = false; clearCampuses(view); }
   views.delete(element); element.replaceChildren();
 };

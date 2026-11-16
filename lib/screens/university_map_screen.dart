@@ -17,12 +17,17 @@ class UniversityMapScreen extends StatefulWidget {
     this.selectionStore,
     this.universityQueries,
     this.openDirections,
+    this.layerMapBuilder,
   });
   final Future<List<MapLocation>> Function(String)? search;
   final Widget Function(MapLocation?, List<MapDestination>)? mapBuilder;
   final UniversitySelectionStore? selectionStore;
   final Map<String, String>? universityQueries;
   final bool Function(Uri)? openDirections;
+
+  /// 테스트용: 대학 표시 레이어까지 받는 지도.
+  final Widget Function(MapLocation?, List<MapDestination>, UniversityLayer)?
+  layerMapBuilder;
   @override
   State<UniversityMapScreen> createState() => _UniversityMapScreenState();
 }
@@ -43,6 +48,8 @@ class _UniversityMapScreenState extends State<UniversityMapScreen> {
   int _originRequest = 0, _destinationRequest = 0;
   bool _byDistance = true;
   KakaoTravelMode _travelMode = KakaoTravelMode.transit;
+  bool _showCampuses = false, _campusLoading = false;
+  CampusSearchResult? _campuses;
 
   void _route(MapDestination destination) {
     if (_origin == null || destination.location == null) return;
@@ -542,23 +549,168 @@ class _UniversityMapScreenState extends State<UniversityMapScreen> {
     );
   }
 
+  UniversityLayer get _campusLayer => UniversityLayer(
+    visible: _showCampuses,
+    onFound: (result) {
+      if (!mounted || !_showCampuses) return;
+      setState(() {
+        // 새 검색 시작 알림이면 이전 목록을 지우고 검색 중으로 표시한다.
+        _campuses = result.searching ? null : result;
+        _campusLoading = result.searching;
+      });
+    },
+    onTap: _campusTapped,
+  );
+
+  void _toggleCampuses(bool on) => setState(() {
+    _showCampuses = on;
+    _campusLoading = on;
+    _campuses = null;
+  });
+
+  // 지도에서 대학을 누르면 이름·주소를 보여 주고 목적지 추가를 제안한다.
+  void _campusTapped(MapLocation place) {
+    if (!mounted) return;
+    final app = appUniversityFor(place, _universityQueries);
+    // 버튼이 달린 스낵바는 저절로 닫히지 않아 다음 알림이 밀리므로, 앞 알림을 닫고 시간이 지나면 닫히게 한다.
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          persist: false,
+          duration: const Duration(seconds: 6),
+          content: Text(
+            '${place.name}\n${place.address}${app == null ? '' : '\n앱 대학 목록: $app'}',
+          ),
+          action: SnackBarAction(
+            label: '목적지에 추가',
+            onPressed: () => _choose(place, false),
+          ),
+        ),
+      );
+  }
+
+  Widget _campusList() {
+    final result = _campuses;
+    final selected = _session.catalogSelection;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              result == null
+                  ? '지도 영역의 대학'
+                  : '지도 영역의 대학 ${result.places.length}곳',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            if (_campusLoading) const LinearProgressIndicator(),
+            if (result?.tooWide == true)
+              const Text(
+                '지도가 너무 넓어 대학을 검색하지 않았습니다. 지도를 확대한 뒤 지도 위 "현 지도에서 검색"을 누르세요.',
+              ),
+            if (result?.needsReload == true)
+              const Text(
+                '지도 기능이 새로 바뀌었습니다. 브라우저에서 강력 새로고침(Ctrl+Shift+R 또는 Ctrl+F5)을 한 뒤 다시 켜 주세요.',
+              ),
+            if (result?.failed == true)
+              const Text('대학을 검색하지 못했습니다. 지도를 조금 옮긴 뒤 "현 지도에서 검색"을 다시 누르세요.'),
+            if (result != null &&
+                !result.tooWide &&
+                !result.failed &&
+                result.places.isEmpty)
+              const Text('이 지도 영역에는 대학이 없습니다. 지도를 옮기거나 축소한 뒤 다시 검색하세요.'),
+            if (result?.truncated == true)
+              const Text(
+                '대학이 많아 카카오 검색 결과 최대 개수까지만 표시했습니다. 지도를 확대하면 빠진 대학을 찾을 수 있습니다.',
+              ),
+            for (final p in result?.places ?? const <MapLocation>[])
+              Builder(
+                builder: (context) {
+                  final app = appUniversityFor(p, _universityQueries);
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.school_outlined),
+                    title: Text(p.name),
+                    subtitle: Text(
+                      '${p.address}${app == null ? '' : '\n앱 대학 목록에 있음: $app (전형·입결 비교 가능)'}',
+                    ),
+                    isThreeLine: app != null,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (app != null && !selected.contains(app))
+                          IconButton(
+                            tooltip: '$app 관심 대학에 추가',
+                            icon: const Icon(Icons.star_outline),
+                            onPressed: () {
+                              if (!_session.toggleCatalogUniversity(app)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('관심 대학은 최대 10곳까지 고를 수 있습니다.'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        IconButton(
+                          tooltip: '${p.name} 목적지에 추가',
+                          icon: const Icon(Icons.add_location_alt_outlined),
+                          onPressed: () => _choose(p, false),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            const Text(
+              '카카오 장소 분류의 "대학교"를 지도에 보이는 영역 안에서 찾습니다. 지도를 옮긴 뒤 지도 위 "현 지도에서 검색"을 누르면 그 영역을 다시 찾습니다. 앱 대학 목록 표시는 이름이 정확히 같은 경우만 붙입니다.',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _map() => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      const Text('초록: 출발지 · 파랑: 목적지/일반 직선 · 주황: 최단 직선'),
+      Row(
+        children: [
+          FilterChip(
+            avatar: const Icon(Icons.school_outlined, size: 18),
+            label: const Text('대학'),
+            tooltip: '지도에 보이는 영역의 대학 표시',
+            selected: _showCampuses,
+            onSelected: _toggleCampuses,
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text('초록: 출발지 · 파랑: 목적지/일반 직선 · 주황: 최단 직선 · 보라: 지도 영역의 대학'),
+          ),
+        ],
+      ),
       const SizedBox(height: 8),
       SizedBox(
         height: MediaQuery.sizeOf(context).width < 850 ? 380 : 620,
         child:
+            widget.layerMapBuilder?.call(
+              _origin,
+              _destinations.values.toList(),
+              _campusLayer,
+            ) ??
             widget.mapBuilder?.call(_origin, _destinations.values.toList()) ??
             KakaoMapView(
               origin: _origin,
               destinations: _destinations.values.toList(),
+              universities: _campusLayer,
             ),
       ),
       const Text(
         '직선거리는 도로·대중교통 최단 경로나 소요시간과 다릅니다. 검색어는 카카오에 전달됩니다. 선택한 위치는 앱 실행 중에 유지되며 로그아웃하면 지워집니다.',
       ),
+      if (_showCampuses) _campusList(),
       _destinationList(),
     ],
   );
