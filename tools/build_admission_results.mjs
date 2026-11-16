@@ -30,9 +30,17 @@ function columnTexts(rows, depth) {
 const find = (cols, test) => cols.findIndex(test);
 const findLast = (cols, test) => cols.map((c, i) => (test(c) ? i : -1)).filter((i) => i >= 0).at(-1) ?? -1;
 
-function trackTitle(rows) {
-  const cell = rows[0].find((v) => v && !/모집단위|구분/.test(compact(v)));
-  return cell ? compact(cell).replace(/\|/g, '') : null;
+// Column headers that some pages put where the table title usually is (이화여대 "계열", 을지대 "모집인원").
+// Exact labels only, so a real track name such as 고려대 "계열적합" is kept.
+const HEADER_CELL = /^(?:계열|구분|모집단위?|모집인원|경쟁률)$|^(?:충원|최종등록자|대학별환산|평가에반영|※)/;
+
+// The track name is the first header cell that is not a column label. When a table has no title cell
+// (을지대), the name is the last "■ 전형명" heading just above the table; notes in parentheses are dropped.
+function trackTitle(rows, before = '') {
+  const cell = rows[0].map((v) => compact(v ?? '')).find((v) => v && !/모집단위|구분/.test(v) && !HEADER_CELL.test(v));
+  if (cell) return cell.replace(/\|/g, '');
+  const heading = [...before.slice(-600).matchAll(/■\s*([^■(※]+)/g)].at(-1)?.[1]?.split('모집단위')[0];
+  return heading ? compact(heading) || null : null;
 }
 
 export function parsePage(html, university, pageYear) {
@@ -45,7 +53,7 @@ export function parsePage(html, university, pageYear) {
     const year = Number([...before.matchAll(/Q\s*2\s*\.\s*(20\d{2})\s*학년도\s*전형\s*결과/g)].at(-1)?.[1]);
     const cols = columnTexts(rows, depth);
     // 2025 results: 50%/70% 환산 + per-area 백분위; 2024 results: 70% 환산 + one "70% cut 평균(백분위)".
-    const title = trackTitle(rows);
+    const title = trackTitle(rows, before);
     // 수시 first: tables with 최종등록자 교과성적 등급 columns, even if they also show 환산·백분위.
     const isSusi = !!title && cols.some((c) => c.includes('모집단위')) &&
       cols.some((c) => /최종등록자/.test(c) && /(교과|학생부)/.test(c) && /등급/.test(c)) && cols.some((c) => /(50|70|80|90)%|평균/.test(c));
