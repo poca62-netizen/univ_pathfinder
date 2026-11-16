@@ -226,9 +226,14 @@ class TrackAlias {
     required this.apply,
     this.change = '',
     this.exceptDepartments = const [],
+    this.departments = const [],
     this.block = false,
     this.caution = false,
   });
+
+  /// 비어 있지 않으면 block·caution을 이 학과에만 적용한다
+  /// (예: 같은 전형에서 약학과만 수능 최저가 새로 생긴 경우).
+  final List<String> departments;
 
   /// true면 이름이 같은 전형을 계속 잇되, [fromYear] 이전 입결은 근거 한계(교과 성적 산출 방식 변경 등)를
   /// 사유에 밝히고 신뢰도를 한 단계 낮춘다.
@@ -257,6 +262,9 @@ class TrackAlias {
     caution: j['caution'] as bool? ?? false,
     exceptDepartments: [
       for (final d in j['exceptDepartments'] as List? ?? const []) d as String,
+    ],
+    departments: [
+      for (final d in j['departments'] as List? ?? const []) d as String,
     ],
   );
 }
@@ -589,6 +597,17 @@ class AdmissionPredictionService {
       return a == null ? trackKey(r.track) : trackKey(a.to);
     }
 
+    // block·caution 항목이 이 입결 행에 해당하는지(대학·연도·전형, 학과 지정 시 학과까지).
+    bool hits(TrackAlias a, SusiResult r) =>
+        a.university == r.university &&
+        r.year <= a.fromYear &&
+        // 이름 변경으로 묶인 옛 전형명 입결도 새 이름 기준으로 끊는다.
+        {trackKey(r.track), tk(r)}.contains(trackKey(a.from)) &&
+        (a.departments.isEmpty ||
+            a.departments.any(
+              (d) => departmentKey(d) == departmentKey(r.department),
+            ));
+
     String? minimumFor(SusiResult r) {
       final key = '${r.university}|${tk(r)}';
       final dept = compact(r.department);
@@ -612,17 +631,13 @@ class AdmissionPredictionService {
     for (final r in results.susi) {
       if (!matches(r.department, interest)) continue;
       if (!includeSpecial && _special.hasMatch(r.track)) continue;
-      if (blocked.any(
-        (a) =>
-            a.university == r.university &&
-            r.year <= a.fromYear &&
-            // 이름 변경으로 묶인 옛 전형명 입결도 새 이름 기준으로 끊는다.
-            {trackKey(r.track), tk(r)}.contains(trackKey(a.from)),
-      )) {
-        continue;
-      }
-      final type = offered[r.university]?[tk(r)]?.type;
-      if (type == null) continue;
+      if (blocked.any((a) => hits(a, r))) continue;
+      final offer = offered[r.university]?[tk(r)];
+      if (offer == null) continue;
+      // 입결 전형명에 특별자격 표시가 없어도 2028 전형명에 있으면 뺀다.
+      // 예: 세종대 입결 "학생부교과(항공시스템공학특별전형)" → 2028 "항공시스템공학특별전형 (정원 외)".
+      if (!includeSpecial && _special.hasMatch(offer.name)) continue;
+      final type = offer.type;
       if (type != '학생부교과' && type != '학생부종합') continue;
       // 입결 행의 유형이 알려져 있고 2028 전형 유형과 다르면(교과↔종합) 이름이 같아도 잇지 않는다.
       // 예: 한양대(서울) 2025 학생부종합(추천형) ↛ 2028 학생부교과 추천형전형.
@@ -659,12 +674,7 @@ class AdmissionPredictionService {
           trackName: track.name,
         ).withMinimum(minimumFor(latest)).withNotes(aliasNotes).withCaution({
           for (final a in cautions)
-            if (rows.any(
-              (r) =>
-                  a.university == r.university &&
-                  r.year <= a.fromYear &&
-                  {trackKey(r.track), tk(r)}.contains(trackKey(a.from)),
-            ))
+            if (rows.any((r) => hits(a, r)))
               '${a.fromYear}학년도까지 입결 뒤 ${a.change}: 같은 기준의 성적 비교가 아니어서 신뢰도 한 단계 낮춤',
         }),
       );

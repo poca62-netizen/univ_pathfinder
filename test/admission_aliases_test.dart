@@ -557,4 +557,108 @@ void main() {
     expect(u.single.track, '참인재전형');
     expect(u.single.note, '학생부종합 → 학생부교과');
   });
+
+  test('departments가 있으면 block은 그 학과 입결만 끊는다', () {
+    SusiResult r(String dept) => SusiResult(
+      university: '가대',
+      year: 2025,
+      type: '미상',
+      track: '인재전형',
+      department: dept,
+      quota: 20,
+      cut50: 2.7,
+      cut70: 3.0,
+      metric: '50%컷',
+    );
+    final ps = AdmissionPredictionService().predict(
+      results: AdmissionResults(
+        source: '',
+        susi: [r('약학과'), r('화학과')],
+        regular: const [],
+      ),
+      catalog: AdmissionCatalog(
+        year: 2028,
+        source: '',
+        status: '',
+        tracks: [
+          AdmissionTrack(
+            university: '가대',
+            department: '',
+            type: '학생부종합',
+            name: '인재전형',
+            quota: '10명',
+            eligibility: '',
+            recommendation: '',
+            recommender: '',
+            selection: '',
+            minimum: '없음',
+            section: '서울',
+          ),
+        ],
+      ),
+      student: const StudentProfile(
+        grade9Optimistic: 2.4,
+        grade9Conservative: 2.6,
+      ),
+      interest: '',
+      matches: (_, _) => true,
+      aliases: const AdmissionAliases(
+        tracks: [
+          TrackAlias(
+            university: '가대',
+            fromYear: 2025,
+            from: '인재전형',
+            toYear: 2028,
+            to: '인재전형',
+            departments: ['약학과'],
+            apply: false,
+            block: true,
+            change: '약학과 수능최저 신설',
+          ),
+        ],
+      ),
+    );
+    expect(ps.map((p) => p.department), ['화학과']);
+  });
+
+  test('실제 번들: 2028 원문 대조로 끊은 전형·학과와 특별전형 제외(개발 로그 91)', () {
+    final ps = AdmissionPredictionService().predict(
+      results: AdmissionResults.fromJson(_read('admission_results')),
+      catalog: AdmissionCatalog.fromJson(_read('admissions_2028')),
+      student: const StudentProfile(
+        grade9Optimistic: 3.0,
+        grade9Conservative: 3.0,
+      ),
+      interest: '',
+      matches: (_, _) => true,
+      aliases: AdmissionAliases.fromJson(_read('admission_aliases')),
+    );
+    Iterable<AdmissionPrediction> of(String u, String t) =>
+        ps.where((p) => p.university == u && p.track == t);
+    // 수능최저·전형요소·통합·면접 비율이 바뀐 전형은 잇지 않는다.
+    for (final (u, t) in [
+      ('세종대', '지역균형전형'),
+      ('서울과기대', '고교추천전형'),
+      ('아주대', '고교추천전형'),
+      ('인천대', '교과성적우수자전형'),
+      ('한국공학대', '교과우수자전형'),
+      ('차의과학대', 'CHA학생부교과전형'),
+    ]) {
+      expect(of(u, t), isEmpty, reason: '$u $t');
+    }
+    // 약학대학만 수능최저가 바뀐 전형은 그 학과만 끊는다.
+    final cha = of('차의과학대', '지역균형선발전형');
+    expect(cha.where((p) => p.department == '약학대학'), isEmpty);
+    expect(cha.map((p) => p.department), contains('간호대학'));
+    expect(cha.first.reason, contains('신뢰도 한 단계 낮춤')); // 산출식 변경 경고
+    final ds = of('덕성여대', '덕성인재전형Ⅱ (서류및면접형)');
+    expect(ds.where((p) => p.department == '약학대학'), isEmpty);
+    expect(ds, isNotEmpty);
+    // 변경이 없거나 세부 변경뿐인 전형은 그대로 잇는다.
+    expect(of('한국공학대', '지역균형전형'), isNotEmpty);
+    expect(of('세종대', '세종인재전형(서류형)'), isNotEmpty);
+    expect(of('한국항공대', '학교장추천전형').first.reason, contains('신뢰도 한 단계 낮춤'));
+    // 2028 전형명에 "정원 외"가 붙은 계약학과 전형은 입결 전형명에 표시가 없어도 뺀다.
+    expect(ps.where((p) => p.track.contains('항공시스템공학특별')), isEmpty);
+  });
 }
