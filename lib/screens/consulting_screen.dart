@@ -6,6 +6,8 @@ import 'package:univ_pathfinder/models/counseling_summary.dart';
 import 'package:univ_pathfinder/services/consulting_service.dart';
 import 'package:univ_pathfinder/services/counseling_summary_service.dart';
 import 'package:univ_pathfinder/screens/university_recommendation_screen.dart';
+import 'package:univ_pathfinder/screens/record_chat_screen.dart';
+import 'package:univ_pathfinder/services/app_help_service.dart';
 
 class ConsultingScreen extends StatefulWidget {
   const ConsultingScreen({super.key, this.loadSummary, this.draftStore});
@@ -142,7 +144,7 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const Text(
-            '원문 키워드로 상담 질문을 제안합니다. 문맥·부정 표현을 이해하는 AI 분석은 아니므로 각 질문이 실제 경험에 맞는지 확인하세요. 적성·합격 가능성을 판정하지 않습니다.',
+            '원문 키워드로 상담 질문을 제안합니다. 이 질문들은 문맥을 이해하는 AI 분석이 아니므로 실제 경험에 맞는지 확인하세요. 근거를 골라 AI 상담을 열면 대화로 더 깊이 정리할 수 있습니다. 적성·합격 가능성을 판정하지 않습니다.',
           ),
           const SizedBox(height: 16),
           TextField(
@@ -249,6 +251,33 @@ class _ConsultingScreenState extends State<ConsultingScreen> {
                         );
                       }
                     },
+            ),
+            const SizedBox(height: 8),
+            FilledButton.tonalIcon(
+              icon: const Icon(Icons.forum_outlined),
+              label: Text('선택한 근거로 AI 상담 (${_selected.length}개)'),
+              onPressed:
+                  _selected.isEmpty ||
+                      _selected.length > RecordChatService.maxEvidence ||
+                      s.activities.failed
+                  ? null
+                  : () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => RecordChatScreen(
+                          evidence: [
+                            for (final c in consultations)
+                              if (_selected.contains(c.source.id)) c.source,
+                          ],
+                          goal: _goal.text,
+                        ),
+                      ),
+                    ),
+            ),
+            Text(
+              _selected.length > RecordChatService.maxEvidence
+                  ? 'AI 상담은 근거를 ${RecordChatService.maxEvidence}개까지 고를 수 있습니다. 선택을 줄이세요.'
+                  : '상담할 근거를 1~${RecordChatService.maxEvidence}개 고르면 AI와 대화하며 강점·다음 탐구를 정리할 수 있습니다. 시작 전에 외부 전송 동의를 받습니다.',
             ),
             if (_onlySelected && visible.isEmpty && consultations.isNotEmpty)
               const Text('선택한 근거가 없습니다. 전체 보기로 돌아가 상담할 근거를 선택하세요.'),

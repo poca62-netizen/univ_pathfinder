@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:univ_pathfinder/screens/start_screen.dart';
+import 'package:univ_pathfinder/screens/app_help_screen.dart';
 import 'package:univ_pathfinder/models/counseling_session.dart';
 import 'package:univ_pathfinder/screens/counseling_summary_screen.dart';
 import 'package:univ_pathfinder/screens/consulting_screen.dart';
@@ -27,6 +28,16 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Univ Pathfinder'),
         actions: [
+          IconButton(
+            tooltip: '앱 도움말',
+            icon: const Icon(Icons.help_outline),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => AppHelpScreen(demoMode: demoMode),
+              ),
+            ),
+          ),
           if (!demoMode)
             IconButton(
               tooltip: '로그아웃',

@@ -217,7 +217,7 @@ class _SchoolRecordState extends State<SchoolRecordScreen> {
                       ),
                     ),
                   ),
-                const Text('저장한 근거는 사용자 확인 내용입니다. 자동 진로 분석은 아직 제공하지 않습니다.'),
+                const Text('저장한 근거는 사용자 확인 내용입니다. 홈 → 생기부 컨설팅에서 근거를 골라 AI 상담을 할 수 있습니다(상담 활용이 켜진 근거만).'),
               ],
             ),
     );
