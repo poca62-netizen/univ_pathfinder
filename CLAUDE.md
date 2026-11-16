@@ -31,7 +31,7 @@
 - 모의고사 지표(표준점수·백분위·등급)를 내신 석차등급과 섞어 평균하지 않는다.
 - 모집요강·등록금에는 공식 출처, 학년도, 확인일, 검증 상태를 함께 기록한다.
 - 합격 가능성은 예측하되 보장·단정하지 않는다. 예측마다 비교한 과거 입결(학년도·지표·인원)·신뢰도·한계를 함께 보여 준다. 자료가 부족하면 "판단 불가·자료 부족"으로 표시한다.
-- 단계를 마치면 `DEVELOPMENT_LOG.md`에 다음 번호(현재 86 다음)로 기록하고, 필요하면 `docs/NEXT_STEPS.md`를 갱신한다.
+- 단계를 마치면 `DEVELOPMENT_LOG.md`에 다음 번호(현재 90 다음)로 기록하고, 필요하면 `docs/NEXT_STEPS.md`를 갱신한다.
 
 ## 실행·검증 명령
 ```powershell
@@ -78,7 +78,7 @@ assets/data/             2028 전형계획·입결 비교·등록금 JSON 번들
 assets/samples/          가상 성적표 PDF
 web/                     index.html, grade_ocr.js·kakao_map.js 등 JS 브리지, vendor/ocr(PDF.js·Tesseract 정적 파일)
 supabase/sql/            DB 마이그레이션 001~007 (순서대로 적용)
-supabase/functions/      Edge Functions: nickname-auth, nemotron-ocr, commute-times, delete-account
+supabase/functions/      Edge Functions: nickname-auth, nemotron-ocr, commute-times, delete-account, app-help(도움말 챗봇, 지식 베이스는 node tools/build_help_kb.mjs로 생성)
 tools/                   데이터 빌드 스크립트(*.mjs), live_* 원격 검증, ocr/ 브라우저 스모크 테스트
 docs/                    기능별 설계·제한 문서 (NEXT_STEPS.md = 다음 개발 순서)
 성적표/                  ⛔ 실제 개인정보 — 접근 금지
