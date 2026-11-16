@@ -194,6 +194,25 @@ class AdmissionPrediction {
           group: group,
           minimum: minimum,
         );
+
+  /// 비교 근거의 한계(예: 교과 성적 산출 방식 변경)를 밝히고 신뢰도를 한 단계 낮춘다.
+  AdmissionPrediction withCaution(Iterable<String> notes) {
+    if (notes.isEmpty) return this;
+    const levels = ['낮음', '보통', '높음'];
+    final i = levels.indexOf(confidence);
+    return AdmissionPrediction(
+      university: university,
+      kind: kind,
+      track: track,
+      department: department,
+      level: level,
+      confidence: i <= 0 ? confidence : levels[i - 1],
+      reason: '$reason · ${notes.join(" · ")}',
+      evidence: evidence,
+      group: group,
+      minimum: minimum,
+    );
+  }
 }
 
 /// 공식 자료로 확인한 과거 전형명 변경(assets/data/admission_aliases.json).
@@ -208,7 +227,12 @@ class TrackAlias {
     this.change = '',
     this.exceptDepartments = const [],
     this.block = false,
+    this.caution = false,
   });
+
+  /// true면 이름이 같은 전형을 계속 잇되, [fromYear] 이전 입결은 근거 한계(교과 성적 산출 방식 변경 등)를
+  /// 사유에 밝히고 신뢰도를 한 단계 낮춘다.
+  final bool caution;
 
   /// true면 이름이 같아도 [fromYear] 이전 입결을 잇지 않는다(유형·선발 방법이 바뀐 같은 이름 전형).
   final bool block;
@@ -230,6 +254,7 @@ class TrackAlias {
     apply: j['apply'] as bool? ?? false,
     change: j['change'] as String? ?? '',
     block: j['block'] as bool? ?? false,
+    caution: j['caution'] as bool? ?? false,
     exceptDepartments: [
       for (final d in j['exceptDepartments'] as List? ?? const []) d as String,
     ],
@@ -269,7 +294,7 @@ class AdmissionPredictionService {
   static const regularBand = 3.0;
 
   static final _special = RegExp(
-    r'농어촌|기회균형|기회균등|특성화|재직자|장애|특수교육|사회배려|사회통합|국가보훈|보훈|서해|북한|기초생활|차상위|한부모|다문화|고른기회|사배자|만학도|군위탁|체육특기|특기자|실기|예체능|이웃사랑|소외|저소득|배려대상|교육기회배려|지역의사|계약학과|국방',
+    r'농어촌|기회균형|기회균등|특성화|재직자|장애|특수교육|사회배려|사회통합|국가보훈|보훈|서해|북한|기초생활|차상위|한부모|다문화|고른기회|사배자|만학도|군위탁|체육특기|특기자|실기|예체능|이웃사랑|소외|저소득|배려대상|교육기회배려|지역의사|계약학과|국방|배려자|사회기여|고운사회|지역의료|정원\s*외|목회자|지도자|어울림|사회공헌|밝은사회|군사학과',
   );
 
   String compact(String s) =>
@@ -370,7 +395,11 @@ class AdmissionPredictionService {
         .replaceAll('(정원외)', '')
         .replaceAll('전형', '');
     final key = base
-        .replaceAll(RegExp(r'^(학생부교과|학생부종합|학생부)'), '')
+        // 유형 이름은 괄호·줄표가 뒤따르거나 이름 전체일 때만 뗀다. "학생부교과우수자"는
+        // "학생부 교과우수자"(→ 교과우수자)이지 "학생부교과 + 우수자"가 아니다.
+        .replaceFirst(RegExp(r'^(?:학생부교과|학생부종합)(?=[(\-–—_:]|$)|^학생부'), '')
+        // 단국대 "학생부종합전형–DKU인재(서류형)"처럼 유형과 전형명 사이의 줄표.
+        .replaceFirst(RegExp(r'^[-–—_:]+'), '')
         .replaceAll(RegExp(r'[()]'), '');
     // "학생부종합전형"처럼 유형 이름만 있으면 유형 이름을 키로 쓴다(빈 키로 서로 섞이지 않게).
     return key.isNotEmpty ? key : base.replaceAll(RegExp(r'[()]'), '');
@@ -540,6 +569,10 @@ class AdmissionPredictionService {
       for (final a in aliases?.tracks ?? const <TrackAlias>[])
         if (a.block) a,
     ];
+    final cautions = [
+      for (final a in aliases?.tracks ?? const <TrackAlias>[])
+        if (a.caution) a,
+    ];
     final renamed = {
       for (final a in aliases?.tracks ?? const <TrackAlias>[])
         if (a.apply && !a.block) '${a.university}|${trackKey(a.from)}': a,
@@ -583,13 +616,19 @@ class AdmissionPredictionService {
         (a) =>
             a.university == r.university &&
             r.year <= a.fromYear &&
-            trackKey(a.from) == trackKey(r.track),
+            // 이름 변경으로 묶인 옛 전형명 입결도 새 이름 기준으로 끊는다.
+            {trackKey(r.track), tk(r)}.contains(trackKey(a.from)),
       )) {
         continue;
       }
       final type = offered[r.university]?[tk(r)]?.type;
       if (type == null) continue;
       if (type != '학생부교과' && type != '학생부종합') continue;
+      // 입결 행의 유형이 알려져 있고 2028 전형 유형과 다르면(교과↔종합) 이름이 같아도 잇지 않는다.
+      // 예: 한양대(서울) 2025 학생부종합(추천형) ↛ 2028 학생부교과 추천형전형.
+      if ((r.type == '학생부교과' || r.type == '학생부종합') && r.type != type) {
+        continue;
+      }
       susi
           .putIfAbsent(
             '${r.university}|${tk(r)}|${departmentKey(r.department)}',
@@ -618,7 +657,16 @@ class AdmissionPredictionService {
               : PredictionKind.comprehensive,
           student,
           trackName: track.name,
-        ).withMinimum(minimumFor(latest)).withNotes(aliasNotes),
+        ).withMinimum(minimumFor(latest)).withNotes(aliasNotes).withCaution({
+          for (final a in cautions)
+            if (rows.any(
+              (r) =>
+                  a.university == r.university &&
+                  r.year <= a.fromYear &&
+                  {trackKey(r.track), tk(r)}.contains(trackKey(a.from)),
+            ))
+              '${a.fromYear}학년도까지 입결 뒤 ${a.change}: 같은 기준의 성적 비교가 아니어서 신뢰도 한 단계 낮춤',
+        }),
       );
     }
 

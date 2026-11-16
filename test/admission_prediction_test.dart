@@ -332,6 +332,65 @@ void main() {
     });
   });
 
+  group('같은 이름 전형 잇기 점검', () {
+    SusiResult typed(int year, String type, String track) => SusiResult(
+      university: '가대',
+      year: year,
+      type: type,
+      track: track,
+      department: '컴퓨터공학과',
+      quota: 20,
+      cut50: 2.7,
+      cut70: 3.0,
+      metric: '50%컷',
+    );
+
+    test('입결 유형이 2028 전형 유형과 다르면(종합→교과) 이름이 같아도 잇지 않는다', () {
+      // 2028 '지역균형전형'은 학생부교과다.
+      expect(_run([typed(2025, '학생부종합', '학생부종합(지역균형전형)')], _grades), isEmpty);
+      // 유형이 같거나 '미상'이면 지금처럼 잇는다.
+      expect(
+        _run([typed(2025, '학생부교과', '학생부교과(지역균형전형)')], _grades),
+        hasLength(1),
+      );
+      expect(_run([typed(2025, '미상', '지역균형전형')], _grades), hasLength(1));
+    });
+
+    test('사회기여자·배려자·정원 외·고운사회 전형은 일반 예측에서 뺀다', () {
+      final s = AdmissionPredictionService();
+      for (final name in [
+        '사회기여자전형',
+        '사회기여 및 배려자전형',
+        '항공시스템공학특별전형 (정원 외)',
+        '고운사회전형',
+        '어울림전형',
+        '사회공헌통합전형',
+        '밝은사회전형',
+        '재림교회목회자추천전형',
+        '기독교지도자전형',
+        '군사학과전형',
+      ]) {
+        final ps = s.predict(
+          results: AdmissionResults(
+            source: '',
+            susi: [typed(2025, '미상', name)],
+            regular: const [],
+          ),
+          catalog: AdmissionCatalog(
+            year: 2028,
+            source: '',
+            status: '',
+            tracks: [_track('가대', name, '학생부교과')],
+          ),
+          student: _grades,
+          interest: '컴퓨터',
+          matches: _matches,
+        );
+        expect(ps, isEmpty, reason: name);
+      }
+    });
+  });
+
   group('학과명 변경 묶기', () {
     test('학부→학과·가운뎃점·(주) 표기 차이는 같은 모집단위로 묶고 최근 이름·당시 이름을 밝힌다', () {
       final p = _run([
@@ -366,6 +425,14 @@ void main() {
       );
       expect(s.trackKey('수시지역균형전형'), s.trackKey('지역균형전형'));
       expect(s.trackKey('수시일반전형'), s.trackKey('일반전형'));
+      // 단국대처럼 유형과 전형명 사이에 줄표가 있어도 같은 키.
+      expect(s.trackKey('학생부종합전형-dku인재(서류형)'), s.trackKey('DKU인재(서류형)전형'));
+      expect(s.trackKey('학생부교과전형–지역균형선발'), s.trackKey('지역균형선발전형'));
+      // "학생부교과우수자"는 "학생부 + 교과우수자"다(유형 이름 + "우수자"가 아니다).
+      expect(s.trackKey('학생부교과우수자전형'), s.trackKey('교과우수자전형'));
+      expect(s.trackKey('학생부면접우수자전형'), s.trackKey('면접우수자전형'));
+      expect(s.trackKey('학생부교과우수자전형'), isNot(s.trackKey('학생부우수자전형')));
+      expect(s.trackKey('학생부교과(지역균형)'), s.trackKey('지역균형전형'));
     });
 
     test('괄호 안 전공이 다르면 묶지 않는다', () {

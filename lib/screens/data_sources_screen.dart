@@ -5,6 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:univ_pathfinder/services/kakao_map.dart';
 import 'package:univ_pathfinder/widgets/official_admission_source.dart';
 
+const _aliasLabels = ['묶음', '끊음', '경고', '묶지 않음'];
+
+/// 대응표 항목의 처리: 이름이 달라도 묶음 / 이름이 같아도 끊음 / 잇되 경고 / 근거 부족으로 묶지 않음.
+String _aliasLabel(Map<String, dynamic> a) => a['apply'] == true
+    ? '묶음'
+    : a['block'] == true
+    ? '끊음'
+    : a['caution'] == true
+    ? '경고'
+    : '묶지 않음';
+
 /// Counts derived from the bundled data so the page never drifts from the data.
 class DataSourceSummary {
   const DataSourceSummary({
@@ -281,19 +292,20 @@ class _DataSourcesScreenState extends State<DataSourcesScreen> {
                 tilePadding: EdgeInsets.zero,
                 title: Text(
                   '전형명·학과명 변경 대응 (${s.aliasesCheckedAt} 확인 · '
-                  '묶음 ${s.aliases.where((a) => a['apply'] == true).length} · '
-                  '묶지 않음 ${s.aliases.where((a) => a['apply'] != true).length})',
+                  '${[for (final l in _aliasLabels) '$l ${s.aliases.where((a) => _aliasLabel(a) == l).length}'].join(' · ')})',
                 ),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '대학이 공개한 전년대비 변경사항으로 이름만 바뀌고 선발 방법이 같다고 확인한 경우만 두 해 입결을 같은 전형으로 묶습니다.',
+                    '대학이 공개한 전년대비 변경사항으로 이름만 바뀌고 선발 방법이 같다고 확인한 경우만 두 해 입결을 같은 전형으로 묶습니다. '
+                    '이름이 같아도 전형요소·반영비율·수능최저·유형이 바뀐 전형은 이전 입결을 잇지 않고(끊음), '
+                    '교과 성적 산출 방식만 바뀐 교과전형은 잇되 사유를 밝히고 신뢰도를 한 단계 낮춥니다(경고).',
                     style: TextStyle(fontSize: 13),
                   ),
                   for (final a in s.aliases)
                     _SourceLink(
                       label:
-                          '${a['university']} · ${a['apply'] == true ? '묶음' : '묶지 않음'} · '
+                          '${a['university']} · ${_aliasLabel(a)} · '
                           '${a['from'] ?? '학과 ${(a['pairs'] as List).length}쌍'}'
                           '${a['to'] != null ? ' → ${a['to']}' : ''} · ${a['change']}',
                       url: '${a['url']}',

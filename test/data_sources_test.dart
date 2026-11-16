@@ -71,9 +71,11 @@ void main() {
       tuition: _read('tuition'),
       aliases: _read('admission_aliases'),
     );
-    expect(s.aliasesCheckedAt, '2026-11-15');
+    expect(s.aliasesCheckedAt, matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
     expect(s.aliases.where((a) => a['apply'] == true), isNotEmpty);
     expect(s.aliases.where((a) => a['apply'] == false), isNotEmpty);
+    expect(s.aliases.where((a) => a['block'] == true), isNotEmpty);
+    expect(s.aliases.where((a) => a['caution'] == true), isNotEmpty);
   });
 
   testWidgets('자료 출처 화면: 안내·전형계획 대조 현황·입결·등록금·지도 출처 표시', (tester) async {
