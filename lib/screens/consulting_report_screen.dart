@@ -691,7 +691,7 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
     b
       ..writeln()
       ..writeln(
-        '출처: 대입정보포털 어디가 대학별 전형결과, 2028학년도 대학별 전형계획 정리본(공식 원문 대조 현황은 앱의 자료 출처 참고)',
+        '출처: 대입정보포털 어디가 대학별 전형결과, 2028학년도 대학별 전형계획 자료(공식 원문 대조 현황은 앱의 자료 출처 참고)',
       );
     return b.toString();
   }

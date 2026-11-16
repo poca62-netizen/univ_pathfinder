@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildKb, chunkMarkdown, sanitize, serialize, MAX_CHUNK, OUTPUT } from './build_help_kb.mjs';
+import { buildKb, chunkMarkdown, neutralize, sanitize, serialize, MAX_CHUNK, OUTPUT } from './build_help_kb.mjs';
 import { buildIndex, search, selectContext, tokenize } from '../supabase/functions/app-help/search.mjs';
 
 const kb = buildKb();
@@ -27,6 +27,14 @@ test('코드 블록·비밀키·배포 명령·개인정보 폴더는 넣지 않
   for (const re of [/```/, /_API_KEY/, /secrets\s+set/i, /service_role/i, /\.env\.dev/, /성적표\//, /gsk_|nvapi-/, /--dart-define/]) {
     assert.ok(!re.test(all), `지식 베이스에 ${re} 가 남아 있음`);
   }
+});
+
+test('2028 전형계획 기초 자료의 옛 표현·원본 파일 이름은 챗봇 지식 베이스에 넣지 않는다', () => {
+  const all = kb.chunks.map((c) => `${c.title}\n${c.text}`).join('\n');
+  for (const re of [/사용자\s*제공/, /사용자가\s*제공/, /정리본/, /대입전형계획 정리/, /(제작자|작성자)\s*정보/]) {
+    assert.ok(!re.test(all), `지식 베이스에 ${re} 가 남아 있음`);
+  }
+  assert.equal(neutralize('기초 자료는 사용자 제공 정리본(`2028_대입전형계획 정리.html`)이며'), '기초 자료는 2028 전형계획 자료(2028 전형계획 자료)이며');
 });
 
 test('조각은 크기 제한을 지키고 제목 경로를 가진다', () => {

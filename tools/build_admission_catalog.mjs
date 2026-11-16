@@ -1,5 +1,4 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 
 // Parse JSON only. Never execute scripts or copy page decoration/author metadata.
 const source = process.argv[2];
@@ -23,5 +22,5 @@ for (const sheet of data.sheets) for (const row of sheet.rows) {
   if (!seen.has(key)) { seen.add(key); rows.push(record); }
 }
 await mkdir('assets/data', { recursive: true });
-await writeFile('assets/data/admissions_2028.json', JSON.stringify({ year:2028, source:path.basename(source), status:'사용자 제공 정리 자료 · 대학별 공식 원문 대조 전', rows }, null, 2) + '\n');
+await writeFile('assets/data/admissions_2028.json', JSON.stringify({ year:2028, source:'2028학년도 대학별 전형계획 자료', status:'대학별 공식 원문 대조 전', rows }, null, 2) + '\n');
 console.log(JSON.stringify({ universities:new Set(rows.map(r => r.university)).size, tracks:rows.length, departmentRows:rows.filter(r=>r.department).length }));

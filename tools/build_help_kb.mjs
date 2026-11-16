@@ -57,9 +57,22 @@ export function sanitize(markdown) {
   return out.join('\n');
 }
 
+// 2028 전형계획 기초 자료는 앱 안에서 "2028 전형계획 자료"로 부른다.
+// 개발 기록(과거 기록이라 고치지 않음)에 남은 옛 표현·원본 파일 이름이 챗봇 답에 나오지 않게 바꾼다.
+export function neutralize(text) {
+  return text
+    .replace(/`?2028_대입전형계획 정리\.html`?(\s*파일)?/g, '2028 전형계획 자료')
+    .replace(/사용자\s*제공\s*(2028\s*)?(전형계획\s*)?정리본/g, '2028 전형계획 자료')
+    .replace(/(2028\s*)?(전형계획\s*)?정리본/g, '2028 전형계획 자료')
+    .replace(/사용자\s*제공\s*정리\s*자료/g, '2028 전형계획 자료')
+    .replace(/사용자가\s*제공한\s*/g, '')
+    .replace(/사용자\s*제공\s*/g, '')
+    .replace(/(제작자|작성자)\s*정보는?\s*(데이터에\s*)?(포함하지\s*않[^.。]*|제외[^.。]*)[.。]?/g, '');
+}
+
 // 링크는 글자만, 강조·코드 기호는 지운다. 표 구분선은 버린다.
 function plain(text) {
-  return text
+  return neutralize(text)
     .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
     .replace(/\*\*|__|`/g, '')

@@ -19,7 +19,6 @@ String _aliasLabel(Map<String, dynamic> a) => a['apply'] == true
 /// Counts derived from the bundled data so the page never drifts from the data.
 class DataSourceSummary {
   const DataSourceSummary({
-    required this.admissionSource,
     required this.totalTracks,
     required this.universities,
     required this.reviewed,
@@ -41,7 +40,6 @@ class DataSourceSummary {
     this.aliasesCheckedAt = '',
   });
 
-  final String admissionSource;
   final int totalTracks, universities, reviewed, matched, partial, needsCheck;
   final int mirrorBased;
   final List<Map<String, dynamic>> comparisonSources;
@@ -73,7 +71,6 @@ class DataSourceSummary {
     int count(bool Function(String) test) =>
         reviews.where((r) => test('${r['모집인원'] ?? ''}')).length;
     return DataSourceSummary(
-      admissionSource: '${admissions['source'] ?? ''}',
       totalTracks: rows.length,
       universities: rows.map((r) => r['university']).toSet().length,
       reviewed: reviews.length,
@@ -204,10 +201,7 @@ class _DataSourcesScreenState extends State<DataSourcesScreen> {
         title: '2028학년도 대학별 전형계획',
         icon: Icons.menu_book_outlined,
         children: [
-          Text(
-            '수도권 ${s.universities}개 대학 · ${s.totalTracks}개 전형 행. '
-            '기초 자료는 사용자 제공 정리본(${s.admissionSource})이며, 작성자 정보는 데이터에 포함하지 않았습니다.',
-          ),
+          Text('수도권 ${s.universities}개 대학 · ${s.totalTracks}개 전형 행.'),
           const SizedBox(height: 8),
           Text(
             '공식 원문 대조 ${s.reviewed}건 · 일치 ${s.matched} · 부분 일치 ${s.partial} · '
