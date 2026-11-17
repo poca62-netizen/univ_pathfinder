@@ -16,6 +16,34 @@ String _aliasLabel(Map<String, dynamic> a) => a['apply'] == true
     ? '경고'
     : '묶지 않음';
 
+/// 원문 대조 기록 한 칸의 상태: 일치 / 부분 / 대조 전(기록 없음·범위 아님·미확인).
+String reviewState(Object? value) {
+  final v = '${value ?? ''}'.trim();
+  if (v.isEmpty || v.contains('범위 아님') || v.contains('미확인')) return '대조 전';
+  if (v.startsWith('부분')) return '부분';
+  if (v.startsWith('불일치')) return '확인 필요';
+  return '일치';
+}
+
+/// 예측이 쓰는 한 항목(수능최저·선발방법)의 원문 대조 현황.
+class FieldCoverage {
+  const FieldCoverage({this.matched = 0, this.partial = 0, this.unchecked = 0});
+  final int matched, partial, unchecked;
+
+  static FieldCoverage of(Iterable<Map<String, dynamic>> rows, String field) {
+    final states = [
+      for (final r in rows) reviewState((r['officialReview'] as Map?)?[field]),
+    ];
+    return FieldCoverage(
+      matched: states.where((s) => s == '일치').length,
+      partial: states.where((s) => s == '부분').length,
+      unchecked: states.where((s) => s == '대조 전' || s == '확인 필요').length,
+    );
+  }
+
+  String get label => '일치 $matched · 부분 일치 $partial · 대조 전 $unchecked';
+}
+
 /// Counts derived from the bundled data so the page never drifts from the data.
 class DataSourceSummary {
   const DataSourceSummary({
@@ -40,6 +68,10 @@ class DataSourceSummary {
     this.aliasesCheckedAt = '',
     this.referenceSources = const [],
     this.referenceRows = 0,
+    this.studentRecordRows = 0,
+    this.minimumCoverage = const FieldCoverage(),
+    this.selectionCoverage = const FieldCoverage(),
+    this.humanChecked = 0,
   });
 
   final int totalTracks, universities, reviewed, matched, partial, needsCheck;
@@ -62,6 +94,13 @@ class DataSourceSummary {
   final List<Map<String, dynamic>> referenceSources;
   final int referenceRows;
 
+  /// 합격 가능성 예측에 쓰는 학생부교과·종합 행과 그 수능최저·선발방법 원문 대조 현황.
+  final int studentRecordRows;
+  final FieldCoverage minimumCoverage, selectionCoverage;
+
+  /// 사람이 원문을 읽고 쪽 번호·인용문을 남긴 행 수.
+  final int humanChecked;
+
   static DataSourceSummary fromJson({
     required Map<String, dynamic> admissions,
     required Map<String, dynamic> comparison,
@@ -74,6 +113,9 @@ class DataSourceSummary {
     final reviews = rows
         .map((r) => r['officialReview'])
         .whereType<Map>()
+        .toList();
+    final studentRecord = rows
+        .where((r) => r['type'] == '학생부교과' || r['type'] == '학생부종합')
         .toList();
     int count(bool Function(String) test) =>
         reviews.where((r) => test('${r['모집인원'] ?? ''}')).length;
@@ -109,6 +151,12 @@ class DataSourceSummary {
       referenceSources: (reference?['sources'] as List? ?? const [])
           .cast<Map<String, dynamic>>(),
       referenceRows: (reference?['rows'] as List? ?? const []).length,
+      studentRecordRows: studentRecord.length,
+      minimumCoverage: FieldCoverage.of(studentRecord, '수능최저'),
+      selectionCoverage: FieldCoverage.of(studentRecord, '선발방법'),
+      humanChecked: reviews
+          .where((r) => r.values.any((v) => '$v'.contains('원문 확인(사람')))
+          .length,
     );
   }
 
@@ -224,6 +272,19 @@ class _DataSourcesScreenState extends State<DataSourcesScreen> {
           const Text(
             '대학 탐색·비교·후보 화면에서 각 전형의 "공식 시행계획 대조 근거"를 펼치면 쪽 번호와 판정을 볼 수 있습니다. '
             '"확인 필요"는 원문과 차이가 있으나 원인을 특정하지 못해 값을 바꾸지 않은 항목입니다.',
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '합격 가능성 예측에 쓰는 학생부교과·종합 ${s.studentRecordRows}개 행의 원문 대조 · '
+            '수능최저 ${s.minimumCoverage.label} · 선발방법 ${s.selectionCoverage.label}',
+            key: const Key('prediction-field-coverage'),
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          Text(
+            '사람이 원문을 직접 읽고 쪽 번호와 인용문을 남긴 행 ${s.humanChecked}개. '
+            '나머지 일치는 원문 텍스트 자동 대조이며, "부분 일치"는 전형 근처에 "없음·미적용" 표기가 있으나 '
+            '이 전형의 것인지 사람이 확정하지 않았거나 일부 학과 조건이 요약에 빠진 경우입니다.',
+            style: const TextStyle(fontSize: 13),
           ),
           const SizedBox(height: 12),
           const Text('대학 입학처 공식 시행계획(링크 확인일 2026-11-06)'),

@@ -42,6 +42,62 @@ void main() {
     expect(admissions['status'], contains('${s.reviewed}건'));
   });
 
+  test('원문 대조 상태는 일치·부분·대조 전으로 나눈다', () {
+    expect(reviewState(null), '대조 전');
+    expect(reviewState('이번 대조 범위 아님'), '대조 전');
+    expect(reviewState('국어 미확인'), '대조 전');
+    expect(reviewState('부분 일치 · 자료 없음'), '부분');
+    expect(reviewState('불일치 · 원인 미상'), '확인 필요');
+    expect(reviewState('일치 · 원문 확인(사람, PDF 3쪽)'), '일치');
+    expect(reviewState('없음 일치'), '일치');
+    final c = FieldCoverage.of([
+      {
+        'officialReview': {'수능최저': '일치 · x'},
+      },
+      {
+        'officialReview': {'수능최저': '부분 일치 · x'},
+      },
+      {'officialReview': <String, String>{}},
+      <String, dynamic>{},
+    ], '수능최저');
+    expect([c.matched, c.partial, c.unchecked], [1, 1, 2]);
+    expect(c.label, '일치 1 · 부분 일치 1 · 대조 전 2');
+  });
+
+  test('예측에 쓰는 교과·종합 행의 수능최저·선발방법 대조 현황과 사람 확인 기록', () {
+    final admissions = _read('admissions_2028');
+    final s = DataSourceSummary.fromJson(
+      admissions: admissions,
+      comparison: _read('admission_comparison'),
+      tuition: _read('tuition'),
+    );
+    final rows = (admissions['rows'] as List).cast<Map<String, dynamic>>();
+    final core = rows
+        .where((r) => r['type'] == '학생부교과' || r['type'] == '학생부종합')
+        .toList();
+    expect(s.studentRecordRows, core.length);
+    for (final c in [s.minimumCoverage, s.selectionCoverage]) {
+      expect(c.matched + c.partial + c.unchecked, core.length);
+      expect(c.matched, greaterThan(c.unchecked));
+    }
+    expect(s.humanChecked, greaterThanOrEqualTo(50));
+    // 사람 확인 기록은 쪽 번호·인용문·확인일을 함께 남긴다.
+    final human = RegExp(
+      r'원문 확인\(사람, PDF \d+쪽: ".+"(, .+)?, 20\d\d-\d\d-\d\d\)$',
+    );
+    for (final r in rows) {
+      for (final v in ((r['officialReview'] as Map?) ?? const {}).values) {
+        if ('$v'.contains('원문 확인(사람,')) {
+          expect(
+            '$v',
+            matches(human),
+            reason: '${r['university']} ${r['name']}',
+          );
+        }
+      }
+    }
+  });
+
   test('리포트 입결 출처는 페이지마다 학년도·원문 주소·추출 행 수를 갖는다', () {
     final results = _read('admission_results');
     final s = DataSourceSummary.fromJson(
@@ -108,6 +164,8 @@ void main() {
     expect(find.text('자료 출처'), findsOneWidget);
     expect(find.textContaining('최종 모집요강을 확인하세요'), findsOneWidget);
     expect(find.byKey(const Key('review-counts')), findsOneWidget);
+    expect(find.byKey(const Key('prediction-field-coverage')), findsOneWidget);
+    expect(find.textContaining('사람이 원문을 직접 읽고'), findsOneWidget);
     expect(find.textContaining('공식 원문 대조'), findsWidgets);
     expect(find.text('고려대(서울)'), findsOneWidget);
     expect(find.textContaining('재게시본'), findsWidgets);
