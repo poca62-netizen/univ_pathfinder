@@ -1,0 +1,2531 @@
+{
+ "checkedAt": "2026-11-17",
+ "note": "참고 입결(예측에 쓰지 않음). 어디가 결과표에 없어 판단 보류인 전형에 대해 대학이 공개한 입시결과의 학과별 수치를 그대로 옮겼다. 지표가 어디가(최종 등록자 50%·70% 컷)와 다르고(합격자 평균은 등록자 기준보다 좋게 나오는 경향), 2028 전형과 같은 기준인지 검증하지 않았다.",
+ "sources": [
+  {
+   "id": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "title": "숙명여자대학교 2025학년도 수시모집 전형 결과",
+   "url": "https://cdn013.negagea.net/dgsmidc/omr/seoul/web/univ_info2026/숙명여자대학교/숙명여자대학교_2025학년도_수시입시결과.pdf",
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)",
+   "note": "",
+   "mirror": "재게시본(대학 공식 링크 미확인)"
+  },
+  {
+   "id": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "title": "숙명여자대학교 2024학년도 수시모집 전형 결과",
+   "url": "https://cdn013.negagea.net/dgsmidc/omr/seoul/web/univ_info2025/숙명여자대학교/숙명여자대학교_2024학년도_수시입시결과.pdf",
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)",
+   "note": "",
+   "mirror": "재게시본(대학 공식 링크 미확인)"
+  },
+  {
+   "id": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "title": "인천대학교 2024학년도 수시 입시결과",
+   "url": "https://cdn013.negagea.net/dgsmidc/omr/seoul/web/univ_info2025/인천대학교/인천대학교_2024학년도_수시입시결과.pdf",
+   "metric": "최종등록자 평균(교과등급)",
+   "note": "2024 자기추천전형은 면접형·서류형으로 나뉘기 전",
+   "mirror": "재게시본(대학 공식 링크 미확인)"
+  }
+ ],
+ "rows": [
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "한국어문학부",
+   "quota": 12,
+   "value": 2.8,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "역사문화학과",
+   "quota": 6,
+   "value": 2.64,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "프랑스언어·문화학과",
+   "quota": 10,
+   "value": 3.86,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "중어중문학부",
+   "quota": 15,
+   "value": 3.84,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "독일언어·문화학과",
+   "quota": 9,
+   "value": 3.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "일본학과",
+   "quota": 16,
+   "value": 3.84,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "문헌정보학과",
+   "quota": 5,
+   "value": 2.22,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "문화관광학전공",
+   "quota": 9,
+   "value": 3.36,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "르꼬르동블루외식경영전공",
+   "quota": 8,
+   "value": 4.06,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "교육학부",
+   "quota": 9,
+   "value": 2.18,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "가족자원경영학과",
+   "quota": 5,
+   "value": 2.66,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "아동복지학부",
+   "quota": 8,
+   "value": 2.95,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "정치외교학과",
+   "quota": 8,
+   "value": 2.56,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "행정학과",
+   "quota": 5,
+   "value": 2.53,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "홍보광고학과",
+   "quota": 11,
+   "value": 2.56,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "소비자경제학과",
+   "quota": 6,
+   "value": 2.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "사회심리학과",
+   "quota": 6,
+   "value": 2.24,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "법학부",
+   "quota": 20,
+   "value": 2.98,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "경제학부",
+   "quota": 7,
+   "value": 2.98,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "경영학부",
+   "quota": 24,
+   "value": 2.87,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "글로벌협력전공",
+   "quota": 12,
+   "value": 3.63,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "앙트러프러너십전공",
+   "quota": 9,
+   "value": 3.78,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "영어영문학전공",
+   "quota": 20,
+   "value": 3,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "테슬(TESL)전공",
+   "quota": 10,
+   "value": 3.28,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "미디어학부",
+   "quota": 8,
+   "value": 2.88,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "화학과",
+   "quota": 10,
+   "value": 2.25,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "생명시스템학부",
+   "quota": 13,
+   "value": 2.48,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "수학과",
+   "quota": 8,
+   "value": 2.43,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "통계학과",
+   "quota": 12,
+   "value": 2.47,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "화공생명공학부",
+   "quota": 15,
+   "value": 2.66,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "지능형전자시스템전공",
+   "quota": 13,
+   "value": 2.84,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "신소재물리전공",
+   "quota": 13,
+   "value": 2.77,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "기계시스템학부",
+   "quota": 14,
+   "value": 3.09,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "의류학과",
+   "quota": 7,
+   "value": 2.5,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "식품영양학과",
+   "quota": 8,
+   "value": 2.4,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "약학부",
+   "quota": 20,
+   "value": 1.72,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "소프트웨어인재전형",
+   "tracks": [
+    "소프트웨어인재전형"
+   ],
+   "department": "인공지능공학부",
+   "quota": 18,
+   "value": 2.71,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "소프트웨어인재전형",
+   "tracks": [
+    "소프트웨어인재전형"
+   ],
+   "department": "컴퓨터과학전공",
+   "quota": 15,
+   "value": 2.67,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "소프트웨어인재전형",
+   "tracks": [
+    "소프트웨어인재전형"
+   ],
+   "department": "데이터사이언스전공",
+   "quota": 11,
+   "value": 2.76,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "한국어문학부",
+   "quota": 8,
+   "value": 2.07,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "역사문화학과",
+   "quota": 5,
+   "value": 2.09,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "프랑스언어·문화학과",
+   "quota": 3,
+   "value": 2.37,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "중어중문학부",
+   "quota": 9,
+   "value": 2.07,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "독일언어·문화학과",
+   "quota": 2,
+   "value": 2.22,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "일본학과",
+   "quota": 4,
+   "value": 2.15,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "문헌정보학과",
+   "quota": 3,
+   "value": 1.99,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "문화관광학전공",
+   "quota": 5,
+   "value": 2.1,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "르꼬르동블루외식경영전공",
+   "quota": 5,
+   "value": 2.35,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "교육학부",
+   "quota": 6,
+   "value": 2.03,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "가족자원경영학과",
+   "quota": 3,
+   "value": 2.08,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "아동복지학부",
+   "quota": 7,
+   "value": 2.15,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "정치외교학과",
+   "quota": 5,
+   "value": 2.08,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "행정학과",
+   "quota": 5,
+   "value": 2.16,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "홍보광고학과",
+   "quota": 5,
+   "value": 2.19,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "소비자경제학과",
+   "quota": 3,
+   "value": 2.16,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "사회심리학과",
+   "quota": 2,
+   "value": 2.1,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "법학부",
+   "quota": 15,
+   "value": 1.98,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "경제학부",
+   "quota": 16,
+   "value": 2.03,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "경영학부",
+   "quota": 30,
+   "value": 1.95,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "영어영문학전공",
+   "quota": 9,
+   "value": 2.08,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "테슬(TESL)전공",
+   "quota": 3,
+   "value": 2.24,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "미디어학부",
+   "quota": 6,
+   "value": 1.82,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "화학과",
+   "quota": 5,
+   "value": 2.01,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "생명시스템학부",
+   "quota": 7,
+   "value": 2.03,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "수학과",
+   "quota": 4,
+   "value": 2.15,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "통계학과",
+   "quota": 5,
+   "value": 1.94,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "화공생명공학부",
+   "quota": 8,
+   "value": 1.68,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "인공지능공학부",
+   "quota": 10,
+   "value": 1.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "지능형전자시스템전공",
+   "quota": 7,
+   "value": 1.93,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "신소재물리전공",
+   "quota": 5,
+   "value": 1.91,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "컴퓨터과학전공",
+   "quota": 9,
+   "value": 1.93,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "데이터사이언스전공",
+   "quota": 5,
+   "value": 1.88,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "기계시스템학부",
+   "quota": 6,
+   "value": 2.05,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "의류학과",
+   "quota": 6,
+   "value": 2.1,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "식품영양학과",
+   "quota": 7,
+   "value": 1.85,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2025",
+   "university": "숙명여대",
+   "year": 2025,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "약학부",
+   "quota": 5,
+   "value": 1.1,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "한국어문학부",
+   "quota": 8,
+   "value": 1.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "역사문화학과",
+   "quota": 5,
+   "value": 1.95,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "프랑스언어·문화학과",
+   "quota": 3,
+   "value": 2.26,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "중어중문학부",
+   "quota": 9,
+   "value": 2.12,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "독일언어·문화학과",
+   "quota": 2,
+   "value": 2.09,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "일본학과",
+   "quota": 4,
+   "value": 2.05,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "문헌정보학과",
+   "quota": 3,
+   "value": 2,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "문화관광학전공",
+   "quota": 6,
+   "value": 2.07,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "르꼬르동블루외식경영전공",
+   "quota": 6,
+   "value": 1.96,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "교육학부",
+   "quota": 6,
+   "value": 1.93,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "가족자원경영학과",
+   "quota": 3,
+   "value": 2.27,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "아동복지학부",
+   "quota": 7,
+   "value": 2.03,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "정치외교학과",
+   "quota": 5,
+   "value": 1.9,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "행정학과",
+   "quota": 5,
+   "value": 2.12,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "홍보광고학과",
+   "quota": 5,
+   "value": 1.83,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "소비자경제학과",
+   "quota": 3,
+   "value": 2.12,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "사회심리학과",
+   "quota": 2,
+   "value": 1.81,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "법학부",
+   "quota": 15,
+   "value": 1.94,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "경제학부",
+   "quota": 15,
+   "value": 1.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "경영학부",
+   "quota": 29,
+   "value": 2.06,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "영어영문학전공",
+   "quota": 7,
+   "value": 2.02,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "테슬(TESL)전공",
+   "quota": 3,
+   "value": 2.08,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "미디어학부",
+   "quota": 6,
+   "value": 1.92,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "화학과",
+   "quota": 5,
+   "value": 1.76,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "생명시스템학부",
+   "quota": 7,
+   "value": 1.66,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "수학과",
+   "quota": 4,
+   "value": 2.15,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "통계학과",
+   "quota": 6,
+   "value": 1.91,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "화공생명공학부",
+   "quota": 8,
+   "value": 1.75,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "인공지능공학부",
+   "quota": 10,
+   "value": 2.06,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "지능형전자시스템전공",
+   "quota": 7,
+   "value": 2.07,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "신소재물리전공",
+   "quota": 5,
+   "value": 2.01,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "컴퓨터과학전공",
+   "quota": 9,
+   "value": 1.98,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "데이터사이언스전공",
+   "quota": 5,
+   "value": 1.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "기계시스템학부",
+   "quota": 6,
+   "value": 2.17,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "기초공학부",
+   "quota": 5,
+   "value": 1.94,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "의류학과",
+   "quota": 6,
+   "value": 2.04,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "식품영양학과",
+   "quota": 7,
+   "value": 1.85,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "지역균형선발 전형",
+   "tracks": [
+    "지역균형선발전형"
+   ],
+   "department": "약학부",
+   "quota": 5,
+   "value": 1.1,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "한국어문학부",
+   "quota": 12,
+   "value": 3,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "역사문화학과",
+   "quota": 6,
+   "value": 2.65,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "프랑스언어·문화학과",
+   "quota": 10,
+   "value": 3.79,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "중어중문학부",
+   "quota": 14,
+   "value": 3.63,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "독일언어·문화학과",
+   "quota": 9,
+   "value": 3.4,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "일본학과",
+   "quota": 16,
+   "value": 4.17,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "문헌정보학과",
+   "quota": 5,
+   "value": 2.43,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "문화관광학전공",
+   "quota": 8,
+   "value": 3.95,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "르꼬르동블루외식경영전공",
+   "quota": 8,
+   "value": 3.55,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "교육학부",
+   "quota": 9,
+   "value": 2.65,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "가족자원경영학과",
+   "quota": 5,
+   "value": 3.68,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "아동복지학부",
+   "quota": 8,
+   "value": 3.15,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "정치외교학과",
+   "quota": 8,
+   "value": 2.76,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "행정학과",
+   "quota": 5,
+   "value": 2.73,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "홍보광고학과",
+   "quota": 9,
+   "value": 2.87,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "소비자경제학과",
+   "quota": 6,
+   "value": 3.53,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "사회심리학과",
+   "quota": 6,
+   "value": 2.3,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "법학부",
+   "quota": 20,
+   "value": 2.67,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "경제학부",
+   "quota": 12,
+   "value": 3.09,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "경영학부",
+   "quota": 25,
+   "value": 2.62,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "글로벌협력전공",
+   "quota": 12,
+   "value": 3.81,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "앙트러프러너십전공",
+   "quota": 9,
+   "value": 3.83,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "영어영문학전공",
+   "quota": 22,
+   "value": 2.97,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "테슬(TESL)전공",
+   "quota": 10,
+   "value": 3.22,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "sookmyung-2024",
+   "university": "숙명여대",
+   "year": 2024,
+   "sourceTrack": "숙명인재(면접형) 전형",
+   "tracks": [
+    "숙명인재(면접형)전형"
+   ],
+   "department": "미디어학부",
+   "quota": 8,
+   "value": 2.59,
+   "metric": "합격자 평균(최초+충원, 교과등급 단순 평균)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "국어국문학과",
+   "quota": 10,
+   "value": 3.6,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "영어영문학과",
+   "quota": 16,
+   "value": 3.51,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "독어독문학과",
+   "quota": 11,
+   "value": 5.29,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "불어불문학과",
+   "quota": 11,
+   "value": 4.24,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "일본지역문화학과",
+   "quota": 11,
+   "value": 3.44,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "중어중국학과",
+   "quota": 16,
+   "value": 4.28,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "수학과",
+   "quota": 13,
+   "value": 3.79,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "물리학과",
+   "quota": 14,
+   "value": 3.77,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "화학과",
+   "quota": 14,
+   "value": 3.08,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "패션산업학과",
+   "quota": 13,
+   "value": 3.87,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "해양학과",
+   "quota": 10,
+   "value": 3.54,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "사회복지학과",
+   "quota": 10,
+   "value": 3.4,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "미디어커뮤니케이션학과",
+   "quota": 10,
+   "value": 3.18,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "문헌정보학과",
+   "quota": 10,
+   "value": 3.85,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "창의인재개발학과",
+   "quota": 10,
+   "value": 3.31,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "행정학과",
+   "quota": 11,
+   "value": 3.21,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "정치외교학과",
+   "quota": 10,
+   "value": 3.36,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "경제학과",
+   "quota": 19,
+   "value": 3.47,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "무역학부",
+   "quota": 24,
+   "value": 3.61,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "소비자학과",
+   "quota": 13,
+   "value": 3.41,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "기계공학과",
+   "quota": 31,
+   "value": 3.71,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "전기공학과",
+   "quota": 21,
+   "value": 3.47,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "전자공학부",
+   "quota": 28,
+   "value": 3.31,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "산업경영공학과",
+   "quota": 17,
+   "value": 3.55,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "신소재공학과",
+   "quota": 13,
+   "value": 3.18,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "안전공학과",
+   "quota": 13,
+   "value": 3.75,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "에너지화학공학과",
+   "quota": 13,
+   "value": 2.97,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "바이오-로봇시스템공학과",
+   "quota": 13,
+   "value": 3.48,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "컴퓨터공학부",
+   "quota": 29,
+   "value": 2.92,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "정보통신공학과",
+   "quota": 21,
+   "value": 3.36,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "임베디드시스템공학과",
+   "quota": 13,
+   "value": 3.49,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "경영학부",
+   "quota": 24,
+   "value": 3.55,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "세무회계학과",
+   "quota": 10,
+   "value": 3.43,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "운동건강학부",
+   "quota": 4,
+   "value": 3.43,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "국어교육과",
+   "quota": 6,
+   "value": 2.66,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "영어교육과",
+   "quota": 6,
+   "value": 2.96,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "일어교육과",
+   "quota": 6,
+   "value": 3.44,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "수학교육과",
+   "quota": 7,
+   "value": 2.83,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "유아교육과",
+   "quota": 8,
+   "value": 3.13,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "역사교육과",
+   "quota": 5,
+   "value": 2.53,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "윤리교육과",
+   "quota": 5,
+   "value": 2.24,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "도시행정학과",
+   "quota": 10,
+   "value": 3.53,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "건설환경공학전공",
+   "quota": 15,
+   "value": 4.1,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "환경공학전공",
+   "quota": 8,
+   "value": 3.65,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "도시공학과",
+   "quota": 13,
+   "value": 3.95,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "도시건축학부",
+   "quota": 23,
+   "value": 3.46,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "생명과학전공",
+   "quota": 9,
+   "value": 3,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "분자의생명전공",
+   "quota": 9,
+   "value": 2.74,
+   "metric": "최종등록자 평균(교과등급)"
+  },
+  {
+   "source": "incheon-2024",
+   "university": "인천대",
+   "year": 2024,
+   "sourceTrack": "자기추천전형",
+   "tracks": [
+    "자기추천(면접형)전형",
+    "자기추천(서류형)전형"
+   ],
+   "department": "법학부",
+   "quota": 17,
+   "value": 3.24,
+   "metric": "최종등록자 평균(교과등급)"
+  }
+ ]
+}

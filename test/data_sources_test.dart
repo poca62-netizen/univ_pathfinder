@@ -78,6 +78,23 @@ void main() {
     expect(s.aliases.where((a) => a['caution'] == true), isNotEmpty);
   });
 
+  test('참고 입결(예측에 쓰지 않음)은 자료마다 제목·지표·재게시본 표시·주소를 갖는다', () {
+    final s = DataSourceSummary.fromJson(
+      admissions: _read('admissions_2028'),
+      comparison: _read('admission_comparison'),
+      tuition: _read('tuition'),
+      reference: _read('admission_reference_results'),
+    );
+    expect(s.referenceSources, isNotEmpty);
+    expect(s.referenceRows, greaterThan(100));
+    for (final r in s.referenceSources) {
+      expect('${r['title']}', isNotEmpty);
+      expect('${r['metric']}', isNotEmpty);
+      expect('${r['mirror']}', contains('재게시본'));
+      expect('${r['url']}', startsWith('https://'));
+    }
+  });
+
   testWidgets('자료 출처 화면: 안내·전형계획 대조 현황·입결·등록금·지도 출처 표시', (tester) async {
     await tester.binding.setSurfaceSize(const Size(900, 3000));
     addTearDown(() => tester.binding.setSurfaceSize(null));

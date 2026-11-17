@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:univ_pathfinder/models/admission_catalog.dart';
+import 'package:univ_pathfinder/models/reference_results.dart';
 import 'package:univ_pathfinder/services/admission_prediction_service.dart';
 
 Map<String, dynamic> _read(String name) =>
@@ -150,7 +151,11 @@ void main() {
       expect(
         catalog.tracks.any(
           (t) =>
-              t.university == a.university &&
+              // 예측 서비스처럼 캠퍼스 표기를 뗀 이름도 같은 대학으로 본다(한국외대(서울) → 한국외대).
+              {
+                t.university,
+                t.university.replaceAll(RegExp(r'\((서울|글로벌)\)$'), ''),
+              }.contains(a.university) &&
               s.trackKey(t.name) == s.trackKey(a.to),
         ),
         isTrue,
@@ -193,11 +198,11 @@ void main() {
     expect(eulji.where((p) => p.department.startsWith('의예')), isEmpty);
     expect(eulji.first.reason, contains('"지역균형"을 2028 "학교장추천전형"와 같은 전형으로 묶음'));
 
-    // 서울여대: 두 전형을 합친 결과표를 교과우수자로 잇되 체육(스포츠운동과학과)은 뺀다.
-    final swu = ps.where((p) => p.university == '서울여대' && p.track == '교과우수자전형');
-    expect(swu, isNotEmpty);
-    expect(swu.where((p) => p.department == '스포츠운동과학과'), isEmpty);
-    expect(swu.first.reason, contains('신뢰도 한 단계 낮춤')); // 2024 반영방법 변경
+    // 서울여대 교과우수자: 2028 출결 반영(교과 90 + 출결 10)으로 2025 이전 입결을 끊는다(개발 로그 94).
+    expect(
+      ps.where((p) => p.university == '서울여대' && p.track == '교과우수자전형'),
+      isEmpty,
+    );
   });
 
   test('caution=true면 입결을 잇되 사유를 밝히고 신뢰도를 한 단계 낮춘다', () {
@@ -360,10 +365,17 @@ void main() {
           .note,
       contains('반영비율 변경'),
     );
-    // 경고 항목: 가톨릭대 지역균형은 예측에 남되 사유가 붙는다.
-    final ck = ps.where((p) => p.university == '가톨릭대' && p.track == '지역균형전형');
-    expect(ck, isNotEmpty);
-    expect(ck.first.reason, contains('신뢰도 한 단계 낮춤'));
+    // 경고 항목(산출 방식만 바뀐 전형)은 예측에 남되 사유가 붙는다.
+    expect(ps.where((p) => p.reason.contains('신뢰도 한 단계 낮춤')), isNotEmpty);
+    // 가톨릭대 지역균형은 2028 출결 반영으로 끊겨 판단 보류에 사유와 함께 나온다(개발 로그 94).
+    expect(
+      ps.where((p) => p.university == '가톨릭대' && p.track == '지역균형전형'),
+      isEmpty,
+    );
+    expect(
+      u.singleWhere((t) => t.university == '가톨릭대' && t.track == '지역균형전형').note,
+      contains('출결'),
+    );
   });
 
   test('실제 번들: 한양대 2028 학업형은 판단 보류 목록에 통합 사유와 함께 나온다', () {
@@ -637,6 +649,12 @@ void main() {
         ps.where((p) => p.university == u && p.track == t);
     // 수능최저·전형요소·통합·면접 비율이 바뀐 전형은 잇지 않는다.
     for (final (u, t) in [
+      // 개발 로그 94: 2027 어디가와 2028 원문 본문 대조로 추가로 끊은 전형
+      ('가톨릭대', '지역균형전형'),
+      ('한양대(ERICA)', '지역균형선발전형'),
+      ('동국대(서울)', '불교추천인재전형'),
+      ('서울여대', '교과우수자전형'),
+      ('한국외대', '학생부종합전형(서류형)'),
       ('세종대', '지역균형전형'),
       ('서울과기대', '고교추천전형'),
       ('아주대', '고교추천전형'),
@@ -646,6 +664,50 @@ void main() {
     ]) {
       expect(of(u, t), isEmpty, reason: '$u $t');
     }
+    // 끊은 한국외대 서류형은 캠퍼스 표기가 달라도 판단 보류 목록에 사유와 함께 나온다.
+    final untracked = AdmissionPredictionService().untrackedTracks(
+      predictions: ps,
+      results: AdmissionResults.fromJson(_read('admission_results')),
+      catalog: AdmissionCatalog.fromJson(_read('admissions_2028')),
+      interest: '',
+      matches: (_, _) => true,
+      aliases: AdmissionAliases.fromJson(_read('admission_aliases')),
+    );
+    expect(
+      untracked
+          .singleWhere(
+            (t) => t.university == '한국외대' && t.track == '학생부종합전형(서류형)',
+          )
+          .note,
+      contains('수능최저 신설'),
+    );
+    // 같은 전형에 묶음·경고·끊음이 함께 있으면 판단 보류 사유는 끊음의 사유(출결 반영)를 쓴다.
+    expect(
+      untracked
+          .singleWhere((t) => t.university == '서울여대' && t.track == '교과우수자전형')
+          .note,
+      contains('출결'),
+    );
+    // 참고 입결(예측에 쓰지 않음)의 2028 전형명은 실제 2028 전형계획에 있다.
+    final reference = ReferenceResults.fromJson(
+      _read('admission_reference_results'),
+    );
+    final catalog = AdmissionCatalog.fromJson(_read('admissions_2028'));
+    for (final r in reference.rows) {
+      for (final t in r.tracks) {
+        expect(
+          catalog.tracks.any(
+            (c) => c.university == r.university && c.name == t,
+          ),
+          isTrue,
+          reason: '${r.university} $t',
+        );
+      }
+    }
+    expect(
+      reference.forTrack('숙명여대', '지역균형선발전형', (d) => d.contains('컴퓨터')),
+      isNotEmpty,
+    );
     // 약학대학만 수능최저가 바뀐 전형은 그 학과만 끊는다.
     final cha = of('차의과학대', '지역균형선발전형');
     expect(cha.where((p) => p.department == '약학대학'), isEmpty);

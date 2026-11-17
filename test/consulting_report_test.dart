@@ -5,6 +5,7 @@ import 'package:univ_pathfinder/models/admission_catalog.dart';
 import 'package:univ_pathfinder/models/counseling_summary.dart';
 import 'package:univ_pathfinder/models/grade_record.dart';
 import 'package:univ_pathfinder/models/mock_exam_record.dart';
+import 'package:univ_pathfinder/models/reference_results.dart';
 import 'package:univ_pathfinder/models/school_record_evidence.dart';
 import 'package:univ_pathfinder/models/university_outlook.dart';
 import 'package:univ_pathfinder/screens/consulting_report_screen.dart';
@@ -82,9 +83,11 @@ Widget _app({
   bool mock = false,
   List<SchoolRecordEvidence> records = const [],
   List<AdmissionTrack> extraTracks = const [],
+  ReferenceResults reference = const ReferenceResults(sources: [], rows: []),
 }) => MaterialApp(
   home: ConsultingReportScreen(
     loadAliases: () async => const AdmissionAliases(),
+    loadReference: () async => reference,
     loadSummary: () async =>
         _summary(confirmed: confirmed, mock: mock, records: records),
     loadResults: () async => AdmissionResults(
@@ -414,6 +417,8 @@ void main() {
       MaterialApp(
         home: ConsultingReportScreen(
           loadAliases: () async => const AdmissionAliases(),
+          loadReference: () async =>
+              const ReferenceResults(sources: [], rows: []),
           loadSummary: () async => _summary(),
           loadResults: () async => AdmissionResults(
             source: '',
@@ -504,5 +509,82 @@ void main() {
     await tester.pumpAndSettle();
     expect(copied, contains('[과거 입결과 비교하지 못한 2028 전형 1건] 판단 보류'));
     expect(copied, contains('- 가상대: 학업형전형(종합)'));
+  });
+
+  testWidgets('판단 보류 전형에 대학 공개 입결을 참고로만 붙이고(관심 분야 학과만) 복사에도 넣는다', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1000, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    String? copied;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied = (call.arguments as Map)['text'] as String;
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    ReferenceResultRow row(String dept, double v) => ReferenceResultRow(
+      source: 's1',
+      university: '가상대',
+      year: 2025,
+      sourceTrack: '학업형 전형',
+      tracks: const ['학업형전형'],
+      department: dept,
+      value: v,
+      metric: '합격자 평균(최초+충원)',
+    );
+    await tester.pumpWidget(
+      _app(
+        extraTracks: [_track('학업형전형', '학생부종합')],
+        reference: ReferenceResults(
+          sources: const [
+            ReferenceSource(
+              id: 's1',
+              university: '가상대',
+              year: 2025,
+              title: '가상대 2025 수시 결과',
+              url: 'https://example.invalid',
+              metric: '합격자 평균(최초+충원)',
+              mirror: '재게시본',
+            ),
+          ],
+          rows: [row('컴퓨터공학과', 2.41), row('국어국문학과', 2.10)],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _runReport(tester, '컴퓨터');
+    final tile = find.byKey(const Key('report-untracked'));
+    await tester.scrollUntilVisible(
+      tile,
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('report-reference-note')), findsOneWidget);
+    final line = find.textContaining('참고(예측에 쓰지 않음) · 2025 학업형 전형');
+    expect(line, findsOneWidget);
+    final text = tester.widget<Text>(line).data!;
+    expect(text, contains('컴퓨터공학과 2.41'));
+    expect(text, isNot(contains('국어국문학과'))); // 관심 분야 밖 학과는 빼기
+    expect(text, contains('합격자 평균(최초+충원)'));
+    // 예측(안정·적정 등) 목록에는 들어가지 않는다.
+    expect(find.text('과거 입결과 비교하지 못한 2028 전형 (1)'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('report-copy')));
+    await tester.pumpAndSettle();
+    expect(copied, contains('대학 공개 입결(참고)'));
+    expect(copied, contains('가상대 학업형전형 → 참고(예측에 쓰지 않음)'));
   });
 }

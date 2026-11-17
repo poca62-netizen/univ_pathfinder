@@ -38,6 +38,8 @@ class DataSourceSummary {
     this.regularRows = 0,
     this.aliases = const [],
     this.aliasesCheckedAt = '',
+    this.referenceSources = const [],
+    this.referenceRows = 0,
   });
 
   final int totalTracks, universities, reviewed, matched, partial, needsCheck;
@@ -56,12 +58,17 @@ class DataSourceSummary {
   final List<Map<String, dynamic>> aliases;
   final String aliasesCheckedAt;
 
+  /// 판단 보류 전형에 참고로만 붙이는 대학 공개 입결(admission_reference_results.json)의 출처.
+  final List<Map<String, dynamic>> referenceSources;
+  final int referenceRows;
+
   static DataSourceSummary fromJson({
     required Map<String, dynamic> admissions,
     required Map<String, dynamic> comparison,
     required Map<String, dynamic> tuition,
     Map<String, dynamic>? results,
     Map<String, dynamic>? aliases,
+    Map<String, dynamic>? reference,
   }) {
     final rows = (admissions['rows'] as List).cast<Map<String, dynamic>>();
     final reviews = rows
@@ -99,6 +106,9 @@ class DataSourceSummary {
           ...(aliases?[key] as List? ?? const []).cast<Map<String, dynamic>>(),
       ],
       aliasesCheckedAt: '${aliases?['checkedAt'] ?? ''}',
+      referenceSources: (reference?['sources'] as List? ?? const [])
+          .cast<Map<String, dynamic>>(),
+      referenceRows: (reference?['rows'] as List? ?? const []).length,
     );
   }
 
@@ -113,6 +123,8 @@ class DataSourceSummary {
       results: await read('admission_results')
           .then<Map<String, dynamic>?>((v) => v, onError: (_) => null),
       aliases: await read('admission_aliases')
+          .then<Map<String, dynamic>?>((v) => v, onError: (_) => null),
+      reference: await read('admission_reference_results')
           .then<Map<String, dynamic>?>((v) => v, onError: (_) => null),
     );
   }
@@ -303,6 +315,30 @@ class _DataSourcesScreenState extends State<DataSourcesScreen> {
                           '${a['from'] ?? '학과 ${(a['pairs'] as List).length}쌍'}'
                           '${a['to'] != null ? ' → ${a['to']}' : ''} · ${a['change']}',
                       url: '${a['url']}',
+                    ),
+                ],
+              ),
+            if (s.referenceSources.isNotEmpty)
+              ExpansionTile(
+                key: const Key('result-reference'),
+                tilePadding: EdgeInsets.zero,
+                title: Text(
+                  '대학 공개 입결(참고, 예측에 쓰지 않음) · '
+                  '${s.referenceSources.length}개 자료 · ${s.referenceRows}행',
+                ),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '어디가 결과표에 없어 판단 보류인 전형에 대해 대학이 공개한 입시결과의 학과별 수치를 옮겼습니다. '
+                    '지표가 어디가(최종 등록자 50%·70% 컷)와 달라 안정·적정 판정에는 쓰지 않고, 리포트의 판단 보류 목록에 참고로만 보여 줍니다.',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  for (final r in s.referenceSources)
+                    _SourceLink(
+                      label:
+                          '${r['title']} · ${r['metric']} · ${r['mirror']}'
+                          '${'${r['note'] ?? ''}'.isEmpty ? '' : ' · ${r['note']}'}',
+                      url: '${r['url']}',
                     ),
                 ],
               ),

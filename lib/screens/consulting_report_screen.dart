@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:univ_pathfinder/models/reference_results.dart';
 import 'package:flutter/services.dart';
 import 'package:univ_pathfinder/models/admission_catalog.dart';
 import 'package:univ_pathfinder/models/counseling_summary.dart';
@@ -27,6 +28,7 @@ class ConsultingReportScreen extends StatefulWidget {
     this.loadComparison,
     this.loadTuition,
     this.loadAliases,
+    this.loadReference,
     this.printHtml,
   });
 
@@ -38,6 +40,9 @@ class ConsultingReportScreen extends StatefulWidget {
   final Future<Map<String, dynamic>> Function()? loadComparison;
   final Future<TuitionCatalog> Function()? loadTuition;
   final Future<AdmissionAliases> Function()? loadAliases;
+
+  /// 참고 입결(예측에 쓰지 않음). 없어도 리포트는 된다.
+  final Future<ReferenceResults> Function()? loadReference;
 
   @override
   State<ConsultingReportScreen> createState() => _ConsultingReportState();
@@ -51,6 +56,7 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
   CounselingSummary? _summary;
   AdmissionResults? _results;
   AdmissionAliases? _aliases;
+  ReferenceResults? _reference;
   AdmissionCatalog? _catalog;
   Map<String, dynamic>? _comparison;
   TuitionCatalog? _tuition;
@@ -134,6 +140,17 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
                 ))()
             .then<AdmissionAliases?>((v) => v)
             .catchError((_) => null),
+        // 판단 보류 전형에 붙이는 대학 공개 입결(참고용). 없어도 리포트는 된다.
+        (widget.loadReference ??
+                () async => ReferenceResults.fromJson(
+                  jsonDecode(
+                    await rootBundle.loadString(
+                      'assets/data/admission_reference_results.json',
+                    ),
+                  ) as Map<String, dynamic>,
+                ))()
+            .then<ReferenceResults?>((v) => v)
+            .catchError((_) => null),
       ]);
       if (!mounted) return;
       setState(() {
@@ -143,6 +160,7 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
         _comparison = values[3] as Map<String, dynamic>;
         _tuition = values[4] as TuitionCatalog?;
         _aliases = values[5] as AdmissionAliases?;
+        _reference = values[6] as ReferenceResults?;
         final sessions = _sessions;
         _mockId = sessions.isEmpty ? null : sessions.first.id;
         _loading = false;
@@ -461,11 +479,41 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
                   style: const TextStyle(fontSize: 13, height: 1.5),
                 ),
               ),
+            if (_referenceLines.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              const Text(
+                '대학 공개 입결(참고): 어디가와 지표가 달라(예: 최초+충원 합격자 평균은 등록자 기준보다 좋게 나오는 경향) '
+                '안정·적정 판정에 쓰지 않습니다. 2028 전형과 같은 기준인지도 확인되지 않았습니다.',
+                key: Key('report-reference-note'),
+                style: TextStyle(fontSize: 12),
+              ),
+              for (final line in _referenceLines)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    line,
+                    style: const TextStyle(fontSize: 12, height: 1.5),
+                  ),
+                ),
+            ],
           ],
         ),
       ],
     ];
   }
+
+  /// 판단 보류 전형에 붙일 대학 공개 입결(참고) 줄. 관심 분야 학과만.
+  List<String> get _referenceLines => [
+    for (final t in _untracked)
+      for (final g
+          in _reference?.forTrack(
+                t.university,
+                t.track,
+                (d) => _recommend.matches(d, _interest.text),
+              ) ??
+              const <ReferenceGroup>[])
+        '${t.university} ${t.track} → ${g.describe()}',
+  ];
 
   /// 대학별로 묶은 "비교하지 못한 전형" 표시 문자열(변경 내용이 기록돼 있으면 함께).
   Map<String, List<String>> get _untrackedByUniversity {
@@ -686,6 +734,15 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
         );
       for (final e in _untrackedByUniversity.entries) {
         b.writeln('- ${e.key}: ${e.value.join(", ")}');
+      }
+      final refs = _referenceLines;
+      if (refs.isNotEmpty) {
+        b.writeln(
+          '※ 대학 공개 입결(참고): 어디가와 지표가 달라 안정·적정 판정에 쓰지 않음. 2028 전형과 같은 기준인지 미확인.',
+        );
+        for (final line in refs) {
+          b.writeln('- $line');
+        }
       }
     }
     b
