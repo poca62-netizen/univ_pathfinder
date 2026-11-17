@@ -40,7 +40,7 @@ flutter test --no-pub --dart-define=LIVE_NVIDIA=true tools/live_grade_import_tes
 - 좌표와 신뢰도를 기존 표 파서로 변환한다. 사용자가 대조·수정·확인한 값만 기존 RLS가 적용된 DB에 저장한다.
 - PDF와 체험 모드는 기존 로컬 인식이다. PDF를 NVIDIA에 보내는 변환 경로는 아직 없다.
 - 취소는 결과 적용을 막는다. 이미 전달된 서버 요청은 최대 60초 동안 처리될 수 있다.
-- 서버 공통 사용량 제한·사용자별 영구 할당량은 미구현이다. 공개 운영 전에 보완해야 한다.
+- 서버 공통 사용량 제한·사용자별 영구 할당량은 미구현이다. 정식 운영 전에 보완해야 한다.
 
 ## 비밀키와 배포
 NVIDIA 키는 클라이언트 빌드 환경 `.env.dev.json`에서 제거하고 Git 제외 파일 `supabase/.env.local`의 `NVIDIA_API_KEY`로 분리했다. 이 파일을 Flutter의 dart-define 입력으로 사용하지 않는다.
