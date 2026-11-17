@@ -514,21 +514,33 @@ class AdmissionPredictionService {
         if (p.kind != PredictionKind.regular)
           '${p.university}|${trackKey(p.track)}',
     };
-    final notes = {
-      for (final a in aliases?.tracks ?? const <TrackAlias>[])
-        '${a.university}|${trackKey(a.to)}': a.change,
-    };
+    // 같은 2028 전형에 여러 항목(묶음·경고·끊음)이 있으면 판단 보류의 직접 이유인 끊음(block)의 사유를 쓴다.
+    final notes = <String, String>{};
+    final fromBlock = <String>{};
+    for (final a in aliases?.tracks ?? const <TrackAlias>[]) {
+      final k = '${a.university}|${trackKey(a.to)}';
+      if (fromBlock.contains(k) && !a.block) continue;
+      notes[k] = a.change;
+      if (a.block) fromBlock.add(k);
+    }
     final seen = <String>{};
     final out =
         <({String university, String track, String type, String? note})>[];
     for (final t in catalog.tracks) {
       if (t.type != '학생부교과' && t.type != '학생부종합') continue;
       if (!includeSpecial && _special.hasMatch(t.name)) continue;
-      if (!relevant.contains(t.university)) continue;
-      final key = '${t.university}|${trackKey(t.name)}';
+      // predict()처럼 캠퍼스 표기를 뗀 이름으로도 입결 대학을 찾는다(한국외대(서울)·(글로벌) → 한국외대).
+      final base = t.university.replaceAll(RegExp(r'\((서울|글로벌)\)$'), '');
+      final university = relevant.contains(t.university)
+          ? t.university
+          : relevant.contains(base)
+          ? base
+          : null;
+      if (university == null) continue;
+      final key = '$university|${trackKey(t.name)}';
       if (predicted.contains(key) || !seen.add(key)) continue;
       out.add((
-        university: t.university,
+        university: university,
         track: t.name,
         type: t.type,
         note: notes[key],
