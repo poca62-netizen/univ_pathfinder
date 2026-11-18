@@ -1,10 +1,11 @@
 // 앱 도움말 챗봇 서버 로직. index.ts(Deno)와 Node 테스트가 함께 쓴다.
-// 흐름: 로그인 확인 → 지식 베이스 검색 → Groq(OpenAI 호환 API) 호출 → 답변과 근거 문서 반환.
+// 흐름: 로그인 확인 → 지식 베이스 검색 → 하루 호출 한도 차감(quota.mjs) → Groq(OpenAI 호환 API) 호출 → 답변과 근거 문서 반환.
 // mode: 'record'(생기부 상담)는 record.mjs: 근거 ID → 사용자 세션으로 DB 원문 조회 → Groq → [근거 n] 인용 검사.
 // 질문·답변·키·외부 응답은 로그에 남기지 않는다.
 
 import { buildIndex, search, selectContext } from './search.mjs';
 import { buildRecordMessages, checkCitations, fetchEvidence, parseRecordFields } from './record.mjs';
+import { consumeQuota } from './quota.mjs';
 
 export const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // 2026-11-16 Groq 목록 확인: llama-3.3-70b-versatile은 제공 종료(404). 무료 한도 하루 1,000회·분당 8,000토큰.
@@ -113,6 +114,14 @@ export function createHandler({ kb, env, fetch }) {
       if (!parsed) return reply(400, { error: 'INPUT' });
       const { question, history } = parsed;
 
+      // 모델을 부르기 직전에만 하루 한도를 1회 차감한다. 한도를 넘으면 모델을 부르지 않는다.
+      const takeQuota = async (kind) => {
+        const q = await consumeQuota({ fetch, env, authorization, kind });
+        if (q.allowed) return { remaining: q.remaining };
+        const error = q.reason === 'SERVICE_LIMIT' ? 'SERVICE_LIMIT' : 'DAILY_LIMIT';
+        return { error: reply(429, { error, limit: q.limit }) };
+      };
+
       const callGroq = async (messages, temperature) => {
         const model = env('GROQ_MODEL') || DEFAULT_MODEL;
         const response = await fetch(GROQ_URL, {
@@ -140,17 +149,21 @@ export function createHandler({ kb, env, fetch }) {
         if (!fields) return reply(400, { error: 'INPUT' });
         const rows = await fetchEvidence({ fetch, env, authorization, ids: fields.evidenceIds });
         if (!rows) return reply(400, { error: 'EVIDENCE' });
+        const quota = await takeQuota('record');
+        if (quota.error) return quota.error;
         const result = await callGroq(buildRecordMessages(question, history, rows, fields.goal), 0.4);
         if (result.error) return result.error;
-        return reply(200, checkCitations(result.answer, rows));
+        return reply(200, { ...checkCitations(result.answer, rows), remaining: quota.remaining });
       }
 
       const chunks = selectContext(findChunks(index, question, history), CONTEXT_CHARS);
       // 관련 문서가 없으면 모델을 부르지 않는다(무료 한도 절약, 지어낸 답 방지).
       if (chunks.length === 0) return reply(200, { answer: NOT_FOUND_ANSWER, sources: [] });
+      const quota = await takeQuota('help');
+      if (quota.error) return quota.error;
       const result = await callGroq(buildMessages(question, history, chunks), 0.2);
       if (result.error) return result.error;
-      return reply(200, { answer: result.answer, sources: sourcesOf(chunks) });
+      return reply(200, { answer: result.answer, sources: sourcesOf(chunks), remaining: quota.remaining });
     } catch {
       return reply(502, { error: 'UNAVAILABLE' });
     }

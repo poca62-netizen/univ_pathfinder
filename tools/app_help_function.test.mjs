@@ -10,12 +10,15 @@ import {
 const kb = JSON.parse(readFileSync('supabase/functions/app-help/help_kb.json', 'utf8'));
 const FAKE_KEY = 'test-key-not-real';
 
-function setup({ env = {}, user = { id: 'u1' }, groq } = {}) {
+function setup({ env = {}, user = { id: 'u1' }, groq, quota } = {}) {
   const calls = [];
   const fetch = async (url, init = {}) => {
     calls.push({ url: String(url), init });
     if (String(url).endsWith('/auth/v1/user')) {
       return user ? Response.json(user) : new Response('{}', { status: 401 });
+    }
+    if (String(url).endsWith('/rest/v1/rpc/consume_ai_quota')) {
+      return quota ? quota(JSON.parse(init.body), init) : Response.json({ allowed: true, limit: 30, remaining: 29 });
     }
     if (url === GROQ_URL) {
       return groq ? groq(JSON.parse(init.body)) : Response.json({ choices: [{ message: { content: ' 답변입니다. ' } }] });
@@ -139,4 +142,46 @@ test('지금 질문에 내용이 있으면 직전 질문이 검색 결과를 덮
   const vague = findChunks(index, '그럼 그건 어디서 해요?', [{ role: 'user', content: '계정 삭제하고 싶어요' }]);
   assert.match(vague[0].chunk.title, /계정 삭제/);
   assert.deepEqual(findChunks(index, '그럼 그건 어디서 해요?', []), []);
+});
+
+test('모델을 부르기 직전에 사용자 세션으로 하루 한도를 차감하고 남은 횟수를 돌려준다', async () => {
+  let quotaCall;
+  const { handler, calls } = setup({ quota: (b, init) => { quotaCall = { b, init }; return Response.json({ allowed: true, limit: 30, remaining: 12 }); } });
+  const res = await handler(post({ question: '비밀번호 잊어버렸어요' }));
+  assert.equal(res.status, 200);
+  assert.equal((await res.json()).remaining, 12);
+  assert.deepEqual(quotaCall.b, { p_kind: 'help' });
+  assert.equal(quotaCall.init.headers.authorization, 'Bearer token'); // 서비스 키가 아니라 사용자 세션
+  const order = calls.map((c) => c.url);
+  assert.ok(order.findIndex((u) => u.endsWith('consume_ai_quota')) < order.indexOf(GROQ_URL));
+});
+
+test('하루 한도를 넘으면 모델을 부르지 않고 429 DAILY_LIMIT', async () => {
+  const { handler, calls } = setup({ quota: () => Response.json({ allowed: false, reason: 'DAILY_LIMIT', limit: 30, remaining: 0 }) });
+  const res = await handler(post({ question: '비밀번호 잊어버렸어요' }));
+  assert.equal(res.status, 429);
+  assert.deepEqual(await res.json(), { error: 'DAILY_LIMIT', limit: 30 });
+  assert.ok(!calls.some((c) => c.url === GROQ_URL));
+});
+
+test('전체 하루 상한에 닿으면 429 SERVICE_LIMIT', async () => {
+  const { handler, calls } = setup({ quota: () => Response.json({ allowed: false, reason: 'SERVICE_LIMIT', limit: 30, remaining: 5 }) });
+  const res = await handler(post({ question: '비밀번호 잊어버렸어요' }));
+  assert.equal(res.status, 429);
+  assert.equal((await res.json()).error, 'SERVICE_LIMIT');
+  assert.ok(!calls.some((c) => c.url === GROQ_URL));
+});
+
+test('한도 함수를 부를 수 없으면 한도 없이 모델을 부르지 않는다', async () => {
+  const { handler, calls } = setup({ quota: () => new Response('{}', { status: 404 }) });
+  const res = await handler(post({ question: '비밀번호 잊어버렸어요' }));
+  assert.equal(res.status, 502);
+  assert.ok(!calls.some((c) => c.url === GROQ_URL));
+});
+
+test('관련 문서가 없어 모델을 부르지 않는 답은 횟수에 넣지 않는다', async () => {
+  const { handler, calls } = setup();
+  const res = await handler(post({ question: '뭐 어떻게 해야 돼?' }));
+  assert.equal(res.status, 200);
+  assert.ok(!calls.some((c) => c.url.endsWith('consume_ai_quota')));
 });

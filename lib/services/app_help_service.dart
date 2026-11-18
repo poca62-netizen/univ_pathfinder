@@ -45,10 +45,17 @@ class AppHelpService {
   static const maxQuestionLength = 500;
   static const historyLimit = 4;
 
-  static String messageFor(String? code) => switch (code) {
+  /// 서버가 알려 준 오늘 남은 횟수가 이 값 이하이면 답 아래에 알려 준다.
+  static const remainingNoticeAt = 5;
+
+  static String messageFor(String? code, {int? limit}) => switch (code) {
     'AUTH' => '로그인이 만료되었습니다. 다시 로그인한 뒤 물어보세요.',
     'NOT_CONFIGURED' => 'AI 상담이 아직 준비되지 않았습니다. 앱 사용 안내 문서를 참고하세요.',
     'RATE_LIMIT' => '지금 질문이 많아 답할 수 없습니다. 1분쯤 뒤에 다시 물어보세요.',
+    'DAILY_LIMIT' =>
+      '오늘 쓸 수 있는 AI 질문${limit == null ? '' : '($limit회)'}을 모두 썼습니다. '
+          '내일 다시 이용해 주세요.',
+    'SERVICE_LIMIT' => '오늘 AI 상담 이용이 많아 잠시 멈췄습니다. 내일 다시 이용해 주세요.',
     'INPUT' => '질문을 $maxQuestionLength자 이내로 입력하세요.',
     'EVIDENCE' =>
       '선택한 근거 중 삭제되었거나 상담 활용이 꺼진 것이 있습니다. 생기부 컨설팅 화면을 새로고침한 뒤 다시 고르세요.',
@@ -74,8 +81,21 @@ class AppHelpService {
       role: 'assistant',
       text: answerOf(data),
       sources: sources,
+      note: remainingNote(data),
     );
   }
+
+  /// 오늘 남은 AI 질문이 적으면 안내 문구를 만든다.
+  static String? remainingNote(Map<String, dynamic> data) {
+    final remaining = data['remaining'];
+    if (remaining is! int || remaining > remainingNoticeAt) return null;
+    return remaining == 0 ? '오늘 남은 AI 질문이 없습니다.' : '오늘 남은 AI 질문 $remaining회.';
+  }
+
+  static int? _limitOf(Object? details) =>
+      details is Map && details['limit'] is int
+      ? details['limit'] as int
+      : null;
 
   static String checkQuestion(String question) {
     final text = question.trim();
@@ -95,7 +115,9 @@ class AppHelpService {
   static String answerOf(Map<String, dynamic> data) {
     final answer = data['answer'];
     if (answer is! String || answer.trim().isEmpty) {
-      throw AppHelpException(messageFor(data['error'] as String?));
+      throw AppHelpException(
+        messageFor(data['error'] as String?, limit: _limitOf(data)),
+      );
     }
     return answer.trim();
   }
@@ -133,7 +155,10 @@ class AppHelpService {
     } on FunctionException catch (e) {
       final details = e.details;
       throw AppHelpException(
-        messageFor(details is Map ? details['error'] as String? : null),
+        messageFor(
+          details is Map ? details['error'] as String? : null,
+          limit: _limitOf(details),
+        ),
       );
     }
   }
@@ -181,6 +206,7 @@ class RecordChatService {
         : 0;
     final notes = [
       if (citations.isEmpty) uncitedNote,
+      ?AppHelpService.remainingNote(data),
       if (invalid > 0) '선택하지 않은 근거를 가리킨 인용 $invalid개를 지웠습니다.',
     ];
     return AppHelpMessage(

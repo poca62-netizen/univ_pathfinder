@@ -16,12 +16,15 @@ const ROWS = [
   { id: id(2), calendar_year: 2025, school_year: 1, category: '동아리', evidence: '가상 과학 동아리에서 하천 수질 조사 보고서를 작성함.', career_interest: null },
 ];
 
-function setup({ rows = ROWS, rest, groq } = {}) {
+function setup({ rows = ROWS, rest, groq, quota } = {}) {
   const calls = [];
   const fetch = async (url, init = {}) => {
     const u = String(url);
     calls.push({ url: u, init });
     if (u.endsWith('/auth/v1/user')) return Response.json({ id: 'u1' });
+    if (u.endsWith('/rest/v1/rpc/consume_ai_quota')) {
+      return quota ? quota(JSON.parse(init.body)) : Response.json({ allowed: true, limit: 10, remaining: 9 });
+    }
     if (u.includes('/rest/v1/school_record_evidence?')) {
       if (rest) return rest(u, init);
       const ids = decodeURIComponent(new URL(u).searchParams.get('id')).replace(/^in\.\(|\)$/g, '').split(',');
@@ -125,5 +128,27 @@ test('mode 없는 요청은 기존 도움말 모드로 동작한다', async () =
   }));
   assert.equal(res.status, 200);
   assert.ok((await res.json()).sources.length > 0);
-  assert.ok(!calls.some((c) => c.url.includes('/rest/v1/')));
+  assert.ok(!calls.some((c) => c.url.includes('/rest/v1/school_record_evidence')));
+});
+
+test('생기부 상담은 record 한도를 쓰고, 넘으면 모델을 부르지 않는다', async () => {
+  let kind;
+  const ok = setup({ quota: (b) => { kind = b.p_kind; return Response.json({ allowed: true, limit: 10, remaining: 3 }); } });
+  const res = await ok.handler(post({ question: '강점이 뭘까요?', evidenceIds: [id(1)] }));
+  assert.equal(res.status, 200);
+  assert.equal(kind, 'record');
+  assert.equal((await res.json()).remaining, 3);
+
+  const over = setup({ quota: () => Response.json({ allowed: false, reason: 'DAILY_LIMIT', limit: 10, remaining: 0 }) });
+  const res2 = await over.handler(post({ question: '강점이 뭘까요?', evidenceIds: [id(1)] }));
+  assert.equal(res2.status, 429);
+  assert.equal((await res2.json()).error, 'DAILY_LIMIT');
+  assert.ok(!over.calls.some((c) => c.url === GROQ_URL));
+});
+
+test('근거가 잘못된 요청은 한도를 차감하지 않는다', async () => {
+  const { handler, calls } = setup({ rows: [] });
+  const res = await handler(post({ question: '강점이 뭘까요?', evidenceIds: [id(1)] }));
+  assert.equal(res.status, 400);
+  assert.ok(!calls.some((c) => c.url.endsWith('consume_ai_quota')));
 });

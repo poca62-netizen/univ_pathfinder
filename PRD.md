@@ -74,7 +74,7 @@
 
 ## 4. 데이터 설계 (현재 구현)
 
-### Supabase DB (`supabase/sql/001~007`, 모두 사용자별 RLS)
+### Supabase DB (`supabase/sql/001~008`, 모두 사용자별 RLS)
 | 테이블 | 용도 | 주요 필드 |
 |---|---|---|
 | profiles | 사용자 프로필 | user_id(PK, auth.users), nickname, created_at |
@@ -83,15 +83,16 @@
 | school_record_evidence | 생기부 활동·세특 근거 | user_id, calendar_year, school_year, category, evidence, 원문 위치, career_evidence_enabled, import_key |
 | nickname_accounts | 닉네임·PIN 자격 | 정규화 닉네임(PK), user_id(UNIQUE), bcrypt PIN 해시. 클라이언트 접근 불가 |
 | nickname_login_attempts, nickname_auth_rate_limits | 로그인 잠금·요청 제한 | service_role 전용 |
+| ai_usage_daily | AI 상담 하루 호출 횟수(내용은 저장 안 함) | user_id, usage_date(한국 시간), help_count, record_count. 본인 조회만, 증가는 RPC로만 |
 
-RPC: `register_nickname_account`, `authenticate_nickname`(service_role 전용), `import_school_record`(생기부 일괄 저장), `clear_academic_records`(성적자료 일괄 삭제).
+RPC: `register_nickname_account`, `authenticate_nickname`(service_role 전용), `import_school_record`(생기부 일괄 저장), `clear_academic_records`(성적자료 일괄 삭제), `consume_ai_quota`(AI 호출 1회 차감: 도움말 하루 30·생기부 상담 10·전체 900).
 
 ### Edge Functions (`supabase/functions`)
 - `nickname-auth`: 가입·로그인, 표준 Supabase 세션 발급
 - `nemotron-ocr`: 로그인 사용자 이미지 → NVIDIA OCR (키는 서버 Secret)
 - `commute-times`: 좌표 → 카카오모빌리티 자동차 소요시간·거리 (REST 키는 서버 Secret)
 - `delete-account`: 세션 사용자 확인 + PIN 재검증 → Auth 사용자 삭제(연쇄 삭제), 로그인 실패 기록 정리
-- `app-help`: 로그인 사용자의 앱 사용법 질문 → 설계·개발 문서 지식 베이스 검색 → Groq 응답(키는 서버 Secret, 질문·답변 저장 안 함). 기본 모델 openai/gpt-oss-120b, 2026-11-16 배포·가상 계정 실제 점검 완료(개발 로그 88·89). 사용자별 호출 제한은 미구현
+- `app-help`: 로그인 사용자의 앱 사용법 질문 → 설계·개발 문서 지식 베이스 검색 → Groq 응답(키는 서버 Secret, 질문·답변 저장 안 함). 기본 모델 openai/gpt-oss-120b, 2026-11-16 배포·가상 계정 실제 점검 완료(개발 로그 88·89). 사용자별 하루 호출 제한(008, 도움말 30·생기부 상담 10·전체 900회) 적용·배포(2026-11-18, 개발 로그 98)
 
 ### 앱 번들 자료 (`assets/data`, 읽기 전용)
 - `admissions_2028.json`: 2028 전형계획 자료(55개 대학·1,045개 전형), 공식 원문 대조 결과
@@ -122,7 +123,7 @@ RPC: `register_nickname_account`, `authenticate_nickname`(service_role 전용), 
 - 추출 결과는 사용자가 원본과 대조·수정한 뒤 저장한다. 원본에 없는 항목은 null로 둔다.
 - 합격 가능성은 예측하되 단정하지 않는다. 예측에는 과거 입결 근거·신뢰도·한계를 함께 표시한다. 근거 자료가 부족하면 "자료 부족·판단 불가"로 표시한다.
 - 모집요강은 출처·학년도·확인일·검증 상태와 함께 표시한다. 공식 원문 대조가 끝나지 않은 항목은 그렇게 표시한다.
-- 생성형 AI는 서버(`app-help`)를 거쳐 Groq 무료 API로 연결했다: 앱 도움말(설계·개발 문서 근거)과 생기부 AI 상담(사용자가 고르고 동의한 근거만). 성적 수치는 보내지 않고, AI가 수치·합격 가능성을 만들지 않게 지시하며, 생기부 상담은 인용 번호를 서버가 검사한다. 무료 등급 약관(연령·데이터 처리)과 사용자별 호출 제한은 정식 운영 전에 다시 검토한다.
+- 생성형 AI는 서버(`app-help`)를 거쳐 Groq 무료 API로 연결했다: 앱 도움말(설계·개발 문서 근거)과 생기부 AI 상담(사용자가 고르고 동의한 근거만). 성적 수치는 보내지 않고, AI가 수치·합격 가능성을 만들지 않게 지시하며, 생기부 상담은 인용 번호를 서버가 검사한다. 사용자별 하루 호출 제한을 둔다(개발 로그 98). 무료 등급 약관(연령·데이터 처리)은 정식 운영 전에 다시 검토한다.
 
 ## 7. 주요 화면 (현재)
 
@@ -144,7 +145,7 @@ RPC: `register_nickname_account`, `authenticate_nickname`(service_role 전용), 
 - **P0 (완료):** 기본 UI, 닉네임 인증, 내신 직접 입력·저장, 성적표 인식·검증, 모의고사·생기부 저장
 - **P1 (대부분 완료):** 대학 검색·비교, 등록금 표시, 카카오 지도 연동. 남은 것: 공식 원문 전수 대조, 학과별 등록금, 성적자료 삭제 재검증
 - **P2 (진행 중):** 진로 기반 후보(완료), 입결 비교 약·중·강(5개 대학), 수능 최저 비교, 연세대 정시 환산 예시. 남은 것: 다른 대학 공식 환산식, 모집요강 갱신 자동화, 대중교통 시간의 앱 내 비교
-- **이후:** 생성형 AI 상담 고도화(사용자별 호출 제한, 상담 결과 저장 여부), 비밀번호 재설정, 관심 대학·상담 준비의 기기 간 동기화
+- **이후:** 생성형 AI 상담 고도화(상담 결과 저장 여부), 비밀번호 재설정, 관심 대학·상담 준비의 기기 간 동기화
 
 자세한 다음 순서는 `docs/NEXT_STEPS.md`를 따른다.
 

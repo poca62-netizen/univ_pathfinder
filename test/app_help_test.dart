@@ -54,6 +54,41 @@ void main() {
       expect(calls, 0);
     });
 
+    test('하루 한도: 넘으면 한도 횟수와 함께 안내, 남은 횟수가 적으면 답 아래에 알림', () async {
+      final over = AppHelpService(
+        send: (_) async => {'error': 'DAILY_LIMIT', 'limit': 30},
+      );
+      await expectLater(
+        over.ask('질문', const []),
+        throwsA(
+          isA<AppHelpException>().having(
+            (e) => e.message,
+            'message',
+            allOf(contains('30회'), contains('내일')),
+          ),
+        ),
+      );
+      expect(AppHelpService.messageFor('SERVICE_LIMIT'), contains('내일'));
+
+      Future<AppHelpMessage> answerWith(int remaining) => AppHelpService(
+        send: (_) async => {'answer': '답', 'remaining': remaining},
+      ).ask('질문', const []);
+      expect((await answerWith(20)).note, isNull);
+      expect((await answerWith(3)).note, '오늘 남은 AI 질문 3회.');
+      expect((await answerWith(0)).note, '오늘 남은 AI 질문이 없습니다.');
+
+      final record = await RecordChatService(
+        send: (_) async => {
+          'answer': '보입니다 [근거 1].',
+          'citations': [
+            {'number': 1, 'id': 'x', 'label': '2025년 1학년 · 동아리'},
+          ],
+          'remaining': 2,
+        },
+      ).ask('질문', const [], evidenceIds: ['x']);
+      expect(record.note, '오늘 남은 AI 질문 2회.');
+    });
+
     test('서버 오류 코드를 안내 문구로 바꾼다', () async {
       final service = AppHelpService(
         send: (_) async => {'error': 'RATE_LIMIT'},
