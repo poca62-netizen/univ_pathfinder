@@ -288,7 +288,14 @@ class _UniversitySearchScreenState extends State<UniversitySearchScreen> {
   }
 
   Widget _details(String name, List<AdmissionTrack> tracks) => ExpansionTile(
-    title: const Text('전형 원문·등록금 출처 확인'),
+    shape: const Border(),
+    collapsedShape: const Border(),
+    leading: const Icon(Icons.list_alt_outlined, size: 20),
+    title: const Text(
+      '전형별 상세 · 원문·등록금 출처',
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+    ),
+    childrenPadding: const EdgeInsets.only(bottom: 8),
     children: [
       Padding(
         padding: const EdgeInsets.all(16),
@@ -313,23 +320,35 @@ class _UniversitySearchScreenState extends State<UniversitySearchScreen> {
         ),
       for (final t in tracks)
         ExpansionTile(
-          title: Text('${t.type} · ${t.name}'),
+          shape: const Border(),
+          collapsedShape: const Border(),
+          title: Text(
+            '${t.type} · ${t.name}',
+            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+          ),
           subtitle: Text(
             '모집단위: ${t.department.isEmpty ? "자료 미기재" : t.department}',
+            style: const TextStyle(fontSize: 13, color: PathfinderTheme.muted),
           ),
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('모집 인원 원문: ${t.quota.isEmpty ? "자료 미기재" : t.quota}'),
-                  Text('지원자격: ${t.eligibility}'),
-                  Text('추천: ${t.recommendation} · 추천 주체: ${t.recommender}'),
-                  Text('선발 방법: ${t.selection}'),
-                  Text('수능 최저: ${t.minimum}'),
+                  _fact('모집 인원', t.quota.isEmpty ? '자료 미기재' : t.quota),
+                  _fact('지원자격', t.eligibility),
+                  _fact('추천', '${t.recommendation} · 추천 주체: ${t.recommender}'),
+                  _fact('선발 방법', t.selection),
+                  _fact('수능 최저', t.minimum),
                   if (t.requiresSpecialEligibility)
-                    const Text('특별 지원자격 확인이 필요한 전형입니다.'),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        '특별 지원자격 확인이 필요한 전형입니다.',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
                   AdmissionTrackReview(track: t),
                 ],
               ),
@@ -338,6 +357,137 @@ class _UniversitySearchScreenState extends State<UniversitySearchScreen> {
         ),
     ],
   );
+
+  /// 이름표(왼쪽 고정 폭) + 값. 좁은 화면에서는 위아래로.
+  Widget _fact(String label, String value) => Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: LayoutBuilder(
+      builder: (context, c) {
+        const labelStyle = TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: PathfinderTheme.muted,
+        );
+        final body = Text(
+          value,
+          style: const TextStyle(fontSize: 14, height: 1.5),
+        );
+        if (c.maxWidth < 420) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: labelStyle),
+              body,
+            ],
+          );
+        }
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 84,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: Text(label, style: labelStyle),
+              ),
+            ),
+            Expanded(child: body),
+          ],
+        );
+      },
+    ),
+  );
+
+  static const _typeShort = {
+    '학생부교과': '교과',
+    '학생부종합': '종합',
+    '논술': '논술',
+    '수능위주': '수능',
+    '실기/실적': '실기',
+  };
+
+  static int _order(String short) {
+    final i = _typeShort.values.toList().indexOf(short);
+    return i < 0 ? 99 : i;
+  }
+
+  /// 대학 카드 머리: 전형 유형별 개수, 등록금, 전형 수.
+  Widget _cardHeader(String name, List<AdmissionTrack> tracks) {
+    final counts = <String, int>{};
+    for (final t in tracks) {
+      final k = _typeShort[t.type] ?? t.type;
+      counts[k] = (counts[k] ?? 0) + 1;
+    }
+    final tuition =
+        _tuition?.labelFor(name).replaceFirst('연간 평균 등록금: ', '') ??
+        (_tuitionError == null ? '자료 확인 대기' : '조회 실패');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 6),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (final e
+                in counts.entries.toList()
+                  ..sort((x, y) => _order(x.key).compareTo(_order(y.key))))
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: PathfinderTheme.tint,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  '${e.key} ${e.value}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: PathfinderTheme.accent,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            const Icon(
+              Icons.payments_outlined,
+              size: 16,
+              color: PathfinderTheme.muted,
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: '연 평균 등록금  ',
+                      style: TextStyle(color: PathfinderTheme.muted),
+                    ),
+                    TextSpan(
+                      text: tuition,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: PathfinderTheme.ink,
+                      ),
+                    ),
+                  ],
+                ),
+                style: const TextStyle(fontSize: 13.5),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          '${tracks.length}개 전형',
+          style: const TextStyle(fontSize: 12.5, color: PathfinderTheme.muted),
+        ),
+      ],
+    );
+  }
 
   void _open(bool compare) => Navigator.push(
     context,
@@ -424,6 +574,7 @@ class _UniversitySearchScreenState extends State<UniversitySearchScreen> {
                                 ),
                                 onChanged: (v) => setState(() => _query = v),
                               ),
+                              const SizedBox(height: 12),
                               Wrap(
                                 spacing: 8,
                                 runSpacing: 4,
@@ -592,37 +743,62 @@ class _UniversitySearchScreenState extends State<UniversitySearchScreen> {
                         }
                         final name = names[index - 1];
                         final tracks = grouped[name]!;
+                        final selected = _session.catalogSelection.contains(
+                          name,
+                        );
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: Card(
-                            child: Column(
-                              children: [
-                                CheckboxListTile(
-                                  title: Text(
-                                    name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 160),
+                            decoration: BoxDecoration(
+                              color: selected
+                                  ? const Color(0xFFF5FAF8)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: selected
+                                    ? PathfinderTheme.accent
+                                    : PathfinderTheme.line,
+                                width: selected ? 1.5 : 1,
+                              ),
+                            ),
+                            child: Material(
+                              type: MaterialType.transparency,
+                              clipBehavior: Clip.antiAlias,
+                              borderRadius: BorderRadius.circular(16),
+                              child: Column(
+                                children: [
+                                  CheckboxListTile(
+                                    contentPadding: const EdgeInsets.fromLTRB(
+                                      16,
+                                      8,
+                                      12,
+                                      8,
+                                    ),
+                                    title: Text(
+                                      name,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                        color: PathfinderTheme.ink,
+                                      ),
+                                    ),
+                                    value: selected,
+                                    onChanged:
+                                        _session.selectionBusy ||
+                                            _session.selectionError != null
+                                        ? null
+                                        : (_) => _toggle(name),
+                                    subtitle: _cardHeader(name, tracks),
                                   ),
-                                  value: _session.catalogSelection.contains(
-                                    name,
+                                  const Divider(
+                                    height: 1,
+                                    indent: 16,
+                                    endIndent: 16,
                                   ),
-                                  onChanged:
-                                      _session.selectionBusy ||
-                                          _session.selectionError != null
-                                      ? null
-                                      : (_) => _toggle(name),
-                                  subtitle: Text(
-                                    '${tracks.length}개 전형 · ${_tuition?.labelFor(name) ?? (_tuitionError == null ? "등록금 자료 확인 대기" : "등록금 조회 실패")}',
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 1,
-                                  indent: 16,
-                                  endIndent: 16,
-                                ),
-                                _details(name, tracks),
-                              ],
+                                  _details(name, tracks),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -688,9 +864,7 @@ class _UniversitySearchScreenState extends State<UniversitySearchScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            catalog == null
-                ? '전형계획 자료 확인 중'
-                : catalog.status,
+            catalog == null ? '전형계획 자료 확인 중' : catalog.status,
             style: theme.textTheme.bodySmall,
           ),
           Text(

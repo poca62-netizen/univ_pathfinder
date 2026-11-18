@@ -10,6 +10,7 @@ import 'package:univ_pathfinder/screens/grade_analysis_screen.dart';
 import 'package:univ_pathfinder/models/mock_exam_record.dart';
 import 'package:univ_pathfinder/services/mock_exam_service.dart';
 import 'package:univ_pathfinder/screens/mock_exam_screen.dart';
+import 'package:univ_pathfinder/widgets/ui_kit.dart';
 
 class CounselingDocumentsScreen extends StatefulWidget {
   const CounselingDocumentsScreen({
@@ -114,191 +115,273 @@ class _CounselingDocumentsState extends State<CounselingDocumentsScreen> {
       ),
       body: ListenableBuilder(
         listenable: session,
-        builder: (context, _) => ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Text(
-              '내신부터 생활기록부까지',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '중간·기말 성적은 학년·학기별로, 모의고사는 시행 월별로 구분합니다. 생활기록부의 진로·활동 근거와 출처 위치도 검토해 저장합니다.',
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              '내신은 학년 → 학기 → 시험 구분 순서로 선택합니다. 로그인한 이미지 인식은 NVIDIA를 사용하며, PDF는 브라우저에서 읽습니다. 원본 대조 후 확인한 내신만 저장합니다.',
-            ),
-            const SizedBox(height: 16),
-            for (final kind in [
+        builder: (context, _) {
+          final text = Theme.of(context).textTheme;
+          final signedIn = GradeService.instance.isAuthenticated;
+          int uploaded(StudentDocumentKind kind) => session.documents
+              .where(
+                (d) =>
+                    kind.isSchoolGrade ? d.kind.isSchoolGrade : d.kind == kind,
+              )
+              .length;
+          const uploads = [
+            (
               StudentDocumentKind.midterm,
-              StudentDocumentKind.mockExam,
-              StudentDocumentKind.schoolRecord,
-            ])
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.description_outlined),
-                  title: Text(kind.isSchoolGrade ? '내신 성적표' : kind.label),
-                  subtitle: Text(
-                    '${session.documents.where((d) => kind.isSchoolGrade ? d.kind.isSchoolGrade : d.kind == kind).length}개 · 분석 대기',
-                  ),
-                  trailing: const Icon(Icons.add),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            GradeUploadFileScreenV2(initialKind: kind),
-                      ),
-                    );
-                    if (mounted) await Future.wait([_reload(), _reloadMocks()]);
-                  },
-                ),
-              ),
-            const SizedBox(height: 20),
-            if (GradeService.instance.isAuthenticated)
-              FilledButton.icon(
-                icon: const Icon(Icons.school_outlined),
-                label: const Text('등록한 성적·생기부로 대학 후보 보기'),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const UniversityRecommendationScreen(),
-                  ),
-                ),
-              ),
-            Card(
-              child: ListTile(
-                title: const Text('상담 요약 보기'),
-                subtitle: const Text('저장된 성적·활동 근거와 관심 진로 모아보기'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CounselingSummaryScreen(),
-                  ),
-                ),
-              ),
+              Icons.grading_outlined,
+              '학년·학기·시험별 성적표 (PDF·사진)',
             ),
-            Text('DB에 저장된 내신', style: Theme.of(context).textTheme.titleMedium),
-            if (_loading) const LinearProgressIndicator(),
-            if (!_canLoad) const Text('로그인하면 저장된 성적을 불러옵니다.'),
-            if (_error != null) ...[
-              Text(_error!),
-              TextButton(onPressed: _reload, child: const Text('다시 불러오기')),
-            ],
-            if (_canLoad && !_loading && _error == null && groups.isEmpty)
-              const Text('DB에 저장된 내신이 없습니다.'),
-            for (final entry in groups.entries)
-              Card(
-                child: ListTile(
-                  title: Text(
-                    '${entry.key.$1 == null ? "연도 미상" : "${entry.key.$1}년"} · ${entry.key.$2}학년 ${entry.key.$3}학기 · ${entry.value.first.examLabel}',
-                  ),
-                  subtitle: Text(
-                    '${entry.value.length}개 과목 · ${entry.value.map((r) => r.subjectName).join(", ")}',
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => GradeAnalysisScreen(
-                          initialCalendarFilter:
-                              entry.key.$1?.toString() ?? 'unknown',
-                          initialSchoolYear: entry.key.$2,
-                          initialSemester: entry.key.$3,
-                          initialExamFilter: entry.key.$4 ?? 'unknown',
-                          loadGrades: widget.loadGrades,
+            (
+              StudentDocumentKind.mockExam,
+              Icons.edit_note_outlined,
+              '시행 월별 성적표 · 원점수·표준점수·백분위·등급',
+            ),
+            (
+              StudentDocumentKind.schoolRecord,
+              Icons.history_edu_outlined,
+              '세특·활동 기록에서 진로 근거 고르기',
+            ),
+          ];
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+            children: [
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 840),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text('내신부터 생활기록부까지', style: text.headlineSmall),
+                      const SizedBox(height: 6),
+                      Text(
+                        '성적표와 생활기록부를 올리면 내용을 읽어 표로 보여 드려요. 원본과 맞는지 확인한 것만 저장합니다.',
+                        style: text.bodyLarge?.copyWith(
+                          color: const Color(0xFF647571),
                         ),
                       ),
-                    );
-                    if (mounted) await _reload();
-                  },
+                      const SizedBox(height: 16),
+                      const StepStrip([
+                        '자료 올리기',
+                        '원본과 대조·수정',
+                        '저장 후 대학 후보·리포트',
+                      ]),
+                      const SizedBox(height: 28),
+                      const SectionHeader(
+                        '자료 올리기',
+                        caption: '종류를 고르면 학년·학기 같은 시기를 차례로 선택합니다.',
+                      ),
+                      for (final (kind, icon, description) in uploads) ...[
+                        ActionCard(
+                          title: kind.isSchoolGrade ? '내신 성적표' : kind.label,
+                          subtitle: uploaded(kind) == 0
+                              ? description
+                              : '$description\n이번에 올린 파일 ${uploaded(kind)}개',
+                          icon: icon,
+                          trailing: Icons.add_circle_outline,
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    GradeUploadFileScreenV2(initialKind: kind),
+                              ),
+                            );
+                            if (mounted) {
+                              await Future.wait([_reload(), _reloadMocks()]);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      const SizedBox(height: 2),
+                      const InfoNote(
+                        '파일 원본은 보관하지 않아요. PDF는 이 브라우저 안에서 읽고, 사진은 로그인한 경우 서버의 문자 인식으로 읽습니다.',
+                        icon: Icons.lock_outline,
+                      ),
+                      const SizedBox(height: 32),
+                      const SectionHeader('저장한 자료'),
+                      if (!_canLoad && !_canLoadMocks)
+                        const InfoNote(
+                          '로그인하면 저장한 내신·모의고사·생활기록부 근거를 여기서 다시 볼 수 있어요.',
+                          icon: Icons.login,
+                        )
+                      else ...[
+                        _label(context, '내신'),
+                        if (_loading) const LinearProgressIndicator(),
+                        if (_error != null) _retry(_error!, '다시 불러오기', _reload),
+                        if (_canLoad &&
+                            !_loading &&
+                            _error == null &&
+                            groups.isEmpty)
+                          _empty('아직 저장한 내신이 없어요. 위에서 내신 성적표를 올려 보세요.'),
+                        for (final entry in groups.entries) ...[
+                          ActionCard(
+                            title:
+                                '${entry.key.$1 == null ? "연도 미상" : "${entry.key.$1}년"} · ${entry.key.$2}학년 ${entry.key.$3}학기 · ${entry.value.first.examLabel}',
+                            subtitle:
+                                '${entry.value.length}개 과목 · ${entry.value.map((r) => r.subjectName).join(", ")}',
+                            minHeight: 64,
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => GradeAnalysisScreen(
+                                    initialCalendarFilter:
+                                        entry.key.$1?.toString() ?? 'unknown',
+                                    initialSchoolYear: entry.key.$2,
+                                    initialSemester: entry.key.$3,
+                                    initialExamFilter:
+                                        entry.key.$4 ?? 'unknown',
+                                    loadGrades: widget.loadGrades,
+                                  ),
+                                ),
+                              );
+                              if (mounted) await _reload();
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                        const SizedBox(height: 16),
+                        _label(context, '모의고사 성적'),
+                        if (_mockLoading) const LinearProgressIndicator(),
+                        if (_mockError != null)
+                          _retry(_mockError!, '모의고사 다시 불러오기', _reloadMocks),
+                        if (_canLoadMocks)
+                          ActionCard(
+                            title: '모의고사 저장·조회',
+                            subtitle:
+                                '${_mockRecords.length}개 영역 · 원점수·표준점수·백분위·등급',
+                            minHeight: 64,
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => MockExamScreen(
+                                    loadRecords: widget.loadMockExams,
+                                  ),
+                                ),
+                              );
+                              if (mounted) await _reloadMocks();
+                            },
+                          ),
+                        if (_mockRecords.isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              for (final period
+                                  in _mockRecords
+                                      .map(
+                                        (r) =>
+                                            '${r.calendarYear}년 ${r.schoolYear}학년 ${r.examMonth}월',
+                                      )
+                                      .toSet())
+                                Chip(label: Text(period)),
+                            ],
+                          ),
+                        ],
+                        if (signedIn) ...[
+                          const SizedBox(height: 16),
+                          _label(context, '생활기록부'),
+                          ActionCard(
+                            title: '생활기록부 근거 저장·조회',
+                            subtitle: '활동·진로 근거와 원문 출처 위치',
+                            minHeight: 64,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const SchoolRecordScreen(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                      const SizedBox(height: 32),
+                      const SectionHeader('다음 단계'),
+                      if (signedIn) ...[
+                        FilledButton.icon(
+                          icon: const Icon(Icons.school_outlined),
+                          label: const Text('등록한 성적·생기부로 대학 후보 보기'),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  const UniversityRecommendationScreen(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      ActionCard(
+                        title: '상담 요약 보기',
+                        subtitle: '저장한 성적·활동 근거와 관심 진로를 한눈에',
+                        icon: Icons.summarize_outlined,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CounselingSummaryScreen(),
+                          ),
+                        ),
+                      ),
+                      if (session.documents.isNotEmpty) ...[
+                        const SizedBox(height: 32),
+                        const SectionHeader(
+                          '이번에 올린 파일',
+                          caption: '파일 이름 목록만 있으며 앱을 닫으면 사라져요.',
+                        ),
+                        for (final document in session.documents)
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(
+                              Icons.insert_drive_file_outlined,
+                            ),
+                            title: Text(
+                              '${document.kind.label} · ${document.period}',
+                            ),
+                            subtitle: Text(document.fileName),
+                            trailing: IconButton(
+                              tooltip: '목록에서 제외',
+                              icon: const Icon(Icons.close),
+                              onPressed: () => session.removeDocument(document),
+                            ),
+                          ),
+                      ],
+                    ],
+                  ),
                 ),
-              ),
-            const Text('저장된 성적을 시험 시기별로 묶어 표시합니다. 파일 원본은 보관하지 않습니다.'),
-            const SizedBox(height: 20),
-            Text(
-              'DB에 저장된 모의고사',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            if (_mockLoading) const LinearProgressIndicator(),
-            if (_mockError != null) ...[
-              Text(_mockError!),
-              TextButton(
-                onPressed: _reloadMocks,
-                child: const Text('모의고사 다시 불러오기'),
               ),
             ],
-            if (_canLoadMocks)
-              Card(
-                child: ListTile(
-                  title: const Text('모의고사 저장·조회'),
-                  subtitle: Text(
-                    '${_mockRecords.length}개 영역 · 원점수·표준점수·백분위·등급',
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            MockExamScreen(loadRecords: widget.loadMockExams),
-                      ),
-                    );
-                    if (mounted) await _reloadMocks();
-                  },
-                ),
-              )
-            else
-              const Text('로그인하면 모의고사를 저장하고 다시 조회할 수 있습니다.'),
-            for (final period
-                in _mockRecords
-                    .map(
-                      (r) =>
-                          '${r.calendarYear}년 ${r.schoolYear}학년 ${r.examMonth}월',
-                    )
-                    .toSet())
-              Text(period),
-            const SizedBox(height: 20),
-            if (GradeService.instance.isAuthenticated)
-              Card(
-                child: ListTile(
-                  title: const Text('생활기록부 근거 저장·조회'),
-                  subtitle: const Text('활동·진로 근거와 원문 출처 위치'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const SchoolRecordScreen(),
-                    ),
-                  ),
-                ),
-              ),
-            Text('등록한 자료', style: Theme.of(context).textTheme.titleMedium),
-            const Text('아래 파일 정보 목록은 이번 실행 중에만 유지됩니다.'),
-            if (session.documents.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Text('등록한 자료가 없습니다. 위에서 자료 종류를 선택하세요.'),
-              ),
-            for (final document in session.documents)
-              ListTile(
-                title: Text('${document.kind.label} · ${document.period}'),
-                subtitle: Text(
-                  '${document.fileName}\n자료 정보 목록 · 원본은 보관하지 않았습니다.',
-                ),
-                isThreeLine: true,
-                trailing: IconButton(
-                  tooltip: '목록에서 제외',
-                  icon: const Icon(Icons.close),
-                  onPressed: () => session.removeDocument(document),
-                ),
-              ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
+
+  Widget _label(BuildContext context, String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        color: Color(0xFF647571),
+        letterSpacing: .2,
+      ),
+    ),
+  );
+
+  Widget _empty(String text) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 13.5, color: Color(0xFF647571)),
+    ),
+  );
+
+  Widget _retry(String message, String label, VoidCallback onPressed) => Row(
+    children: [
+      Expanded(child: Text(message)),
+      TextButton(onPressed: onPressed, child: Text(label)),
+    ],
+  );
 }
