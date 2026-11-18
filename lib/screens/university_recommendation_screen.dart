@@ -276,7 +276,7 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(24),
       gradient: const LinearGradient(
-        colors: [Color(0xFF173E37), Color(0xFF286A58)],
+        colors: [Color(0xFF1B8A76), Color(0xFF0F5A4D)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
@@ -285,12 +285,12 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'UNIV PATHFINDER  /  2028',
+          '2028학년도 대학 후보',
           style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 2,
-            color: Color(0xFFBFE0D1),
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            letterSpacing: .2,
+            color: Color(0xFFCDEBE0),
           ),
         ),
         const SizedBox(height: 16),
@@ -748,11 +748,11 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'YOUR SHORTLIST',
+                    '내 조건으로 고른 후보',
                     style: TextStyle(
-                      fontSize: 12,
-                      letterSpacing: 1.8,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      letterSpacing: .2,
+                      fontWeight: FontWeight.w600,
                       color: PathfinderTheme.accent,
                     ),
                   ),
@@ -1133,8 +1133,17 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(u.name, style: Theme.of(context).textTheme.titleLarge),
-                    ListenableBuilder(
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 2,
+                      children: [
+                        Text(
+                          u.name,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        ListenableBuilder(
                       listenable: CounselingSession.instance,
                       builder: (context, _) {
                         final session = CounselingSession.instance;
@@ -1142,10 +1151,17 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
                           u.name,
                         );
                         return TextButton.icon(
+                          style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                            ),
+                          ),
                           icon: Icon(
                             selected
                                 ? Icons.check_circle
                                 : Icons.add_circle_outline,
+                            size: 20,
                           ),
                           label: Text(selected ? '관심 대학 선택 해제' : '관심 대학에 추가'),
                           onPressed:
@@ -1167,6 +1183,8 @@ class _RecommendationState extends State<UniversityRecommendationScreen> {
                                 },
                         );
                       },
+                    ),
+                      ],
                     ),
                     const SizedBox(height: 3),
                     Text(

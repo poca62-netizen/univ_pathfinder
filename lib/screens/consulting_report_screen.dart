@@ -1,3 +1,7 @@
+import 'package:univ_pathfinder/widgets/prediction_style.dart';
+import 'package:univ_pathfinder/widgets/ui_kit.dart';
+import 'package:univ_pathfinder/theme/app_theme.dart';
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -433,16 +437,14 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
           ),
         ),
       ),
-      Card(
-        color: Theme.of(context).colorScheme.secondaryContainer,
-        child: const Padding(
-          padding: EdgeInsets.all(14),
-          child: Text(
-            '이 리포트는 대입정보포털 어디가의 2024·2025학년도 최종등록자 입결과 내 성적을 비교한 예측입니다. 합격을 보장하지 않습니다. '
-            '2028학년도부터 내신이 5등급제로 바뀌어 9등급 입결과의 비교는 근사치이고, 모의고사는 실제 수능과 다를 수 있습니다. '
-            '수시 카드의 수능 최저는 고교 모의고사 등급으로 본 준비도이며, 안정·적정이어도 최저를 맞추지 못하면 불합격입니다. '
-            '지원 전 수능 최저·지원 자격·최종 모집요강을 반드시 확인하세요.',
-          ),
+      const Padding(
+        padding: EdgeInsets.only(top: 12),
+        child: InfoNote(
+          '이 리포트는 대입정보포털 어디가의 2024·2025학년도 최종등록자 입결과 내 성적을 비교한 예측입니다. 합격을 보장하지 않습니다. '
+          '2028학년도부터 내신이 5등급제로 바뀌어 9등급 입결과의 비교는 근사치이고, 모의고사는 실제 수능과 다를 수 있습니다. '
+          '수시 카드의 수능 최저는 고교 모의고사 등급으로 본 준비도이며, 안정·적정이어도 최저를 맞추지 못하면 불합격입니다. '
+          '지원 전 수능 최저·지원 자격·최종 모집요강을 반드시 확인하세요.',
+          icon: Icons.info_outline,
         ),
       ),
       if (predictions.isNotEmpty) _portfolio(predictions),
@@ -545,38 +547,59 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
         l: items.where((p) => p.level == l).length,
     };
     return [
-      const SizedBox(height: 20),
+      const SizedBox(height: 32),
       Text(
         '${kind.label} · ${items.length}건',
         key: Key('report-kind-${kind.name}'),
         style: Theme.of(context).textTheme.titleLarge,
       ),
-      Text(
-        PredictionLevel.values
-            .where((l) => counts[l]! > 0)
-            .map((l) => '${l.label} ${counts[l]}')
-            .join(' · '),
-        style: const TextStyle(fontSize: 13),
-      ),
+      const SizedBox(height: 10),
+      LevelDistribution(counts),
+      const SizedBox(height: 8),
       if (kind != PredictionKind.regular)
         Text(
           '수능 최저: ${[for (final st in MinimumStatus.values) (st, items.where((p) => _checks[p]?.result.status == st).length)].where((e) => e.$2 > 0).map((e) => '${_short(e.$1)} ${e.$2}').join(' · ')}',
           key: Key('report-minimum-${kind.name}'),
-          style: const TextStyle(fontSize: 13),
+          style: const TextStyle(fontSize: 13, color: PathfinderTheme.muted),
         ),
       if (kind == PredictionKind.comprehensive)
         Text(
           '학생부종합 판정은 교과 등급과 입결의 비교만 반영합니다. 서류 평가(생기부)는 대학별 정성 평가라 앱이 점수로 바꾸지 않습니다. '
           '관심 분야와 연결된 생기부 근거: ${_records == null ? "조회 실패" : "${_records!.matched.length}건"}.',
           key: const Key('report-comprehensive-records'),
-          style: const TextStyle(fontSize: 12, height: 1.5),
+          style: const TextStyle(
+            fontSize: 12.5,
+            height: 1.5,
+            color: PathfinderTheme.muted,
+          ),
         ),
+      const SizedBox(height: 8),
       for (final level in PredictionLevel.values)
         if (counts[level]! > 0)
           ExpansionTile(
             key: Key('report-${kind.name}-${level.name}'),
             initiallyExpanded: level == PredictionLevel.fit,
-            title: Text('${level.label} (${counts[level]})'),
+            tilePadding: const EdgeInsets.symmetric(horizontal: 4),
+            title: Row(
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: levelColor(level),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '${level.label} (${counts[level]})',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
             children: [
               for (final p in items.where((p) => p.level == level)) _card(p),
             ],
@@ -760,24 +783,30 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
       final p = pick.prediction;
       final status = pick.minimum?.result.status;
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 44,
-              child: Text(
+            Padding(
+              padding: const EdgeInsets.only(top: 1),
+              child: LevelBadge(
                 pick.slot,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
+                color: slotColor(pick.slot),
+                width: 46,
               ),
             ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${p.university} · ${p.department}'),
+                  Text(
+                    '${p.university} · ${p.department}',
+                    style: const TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   Text(
                     [
                       p.track,
@@ -786,7 +815,10 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
                       if (status != null && status != MinimumStatus.none)
                         '최저 ${status.label}',
                     ].join(' · '),
-                    style: const TextStyle(fontSize: 12),
+                    style: const TextStyle(
+                      fontSize: 12.5,
+                      color: PathfinderTheme.muted,
+                    ),
                   ),
                   if (pick.note != null)
                     Text(
@@ -806,23 +838,32 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
 
     return Card(
       key: const Key('report-portfolio'),
-      margin: const EdgeInsets.only(top: 12),
+      margin: const EdgeInsets.only(top: 16),
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('지원 조합 예시', style: theme.textTheme.titleMedium),
+            Text(
+              '지원 조합 예시',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             const SizedBox(height: 4),
             const Text(
               '아래 목록에서 신뢰도·수능 최저 상태·대학 검토 순서로 고른 한 가지 예시입니다. '
               '어려움·판단 보류·최저 미달 수준은 넣지 않았고, 같은 대학은 한 번만 넣었습니다. '
               '실제 지원은 대학별 중복 지원 제한·전형 일정·면접 일정을 확인해 정하세요.',
-              style: TextStyle(fontSize: 12, height: 1.5),
+              style: TextStyle(
+                fontSize: 12.5,
+                height: 1.5,
+                color: PathfinderTheme.muted,
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             Text('수시 6장', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Wrap(
               spacing: 6,
               children: [
@@ -843,8 +884,9 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
                 child: Text('넣을 수 있는 수시 후보가 없습니다.'),
               ),
             for (final pick in plan.susi) row(pick),
-            const SizedBox(height: 10),
+            const Divider(height: 28),
             Text('정시 가·나·다군', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
             if (plan.regular.isEmpty)
               const Padding(
                 padding: EdgeInsets.only(top: 6),
@@ -872,54 +914,78 @@ class _ConsultingReportState extends State<ConsultingReportScreen> {
     final error = Theme.of(context).colorScheme.error;
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      child: ExpansionTile(
-        leading: below
-            ? Icon(
-                Icons.warning_amber_rounded,
-                color: error,
-                semanticLabel: '수능 최저 미달 수준',
-              )
-            : null,
-        title: Text('${p.university} · ${p.department}'),
-        subtitle: Text(
-          '${p.track}${p.group != null ? " · ${p.group}" : ""} · 신뢰도 ${p.confidence}'
-          '${check != null ? " · 최저 ${_short(check.result.status)}" : ""}',
-          style: TextStyle(fontSize: 12, color: below ? error : null),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(PathfinderTheme.radiusCard),
+        side: const BorderSide(color: PathfinderTheme.line),
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(color: levelColor(p.level), width: 4),
+          ),
         ),
-        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(p.reason, style: const TextStyle(fontSize: 13, height: 1.5)),
-          const SizedBox(height: 6),
-          for (final e in p.evidence)
-            Text('• $e', style: const TextStyle(fontSize: 12, height: 1.5)),
-          if (check != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              '수능 최저: ${check.result.status.label}'
-              '${check.branch != null ? " (${check.branch} 기준${check.byField ? ", 고른 계열로 적용 — 이 모집단위의 소속 계열을 원문에서 확인하세요" : ""})" : ""} — ${check.result.reason}',
-              style: TextStyle(
-                fontSize: 12,
-                height: 1.5,
-                color: below ? error : null,
-                fontWeight: below ? FontWeight.w600 : null,
-              ),
+        child: ExpansionTile(
+          leading: below
+              ? Icon(
+                  Icons.warning_amber_rounded,
+                  color: error,
+                  semanticLabel: '수능 최저 미달 수준',
+                )
+              : null,
+          title: Text(
+            '${p.university} · ${p.department}',
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+          subtitle: Text(
+            '${p.track}${p.group != null ? " · ${p.group}" : ""} · 신뢰도 ${p.confidence}'
+            '${check != null ? " · 최저 ${_short(check.result.status)}" : ""}',
+            style: TextStyle(
+              fontSize: 12.5,
+              color: below ? error : PathfinderTheme.muted,
             ),
-            for (final d in check.result.details)
-              Text('  · $d', style: const TextStyle(fontSize: 12, height: 1.5)),
-            if (p.minimum != null)
-              Text(
-                '최저 원문(2028 전형 자료): ${p.minimum}',
-                style: const TextStyle(fontSize: 11, height: 1.5),
-              ),
-          ],
-          if (fee != null) ...[
+          ),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(p.reason, style: const TextStyle(fontSize: 13, height: 1.5)),
             const SizedBox(height: 6),
-            Text(fee, style: const TextStyle(fontSize: 12)),
+            for (final e in p.evidence)
+              Text('• $e', style: const TextStyle(fontSize: 12, height: 1.5)),
+            if (check != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                '수능 최저: ${check.result.status.label}'
+                '${check.branch != null ? " (${check.branch} 기준${check.byField ? ", 고른 계열로 적용 — 이 모집단위의 소속 계열을 원문에서 확인하세요" : ""})" : ""} — ${check.result.reason}',
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.5,
+                  color: below ? error : null,
+                  fontWeight: below ? FontWeight.w600 : null,
+                ),
+              ),
+              for (final d in check.result.details)
+                Text(
+                  '  · $d',
+                  style: const TextStyle(fontSize: 12, height: 1.5),
+                ),
+              if (p.minimum != null)
+                Text(
+                  '최저 원문(2028 전형 자료): ${p.minimum}',
+                  style: const TextStyle(fontSize: 11, height: 1.5),
+                ),
+            ],
+            if (fee != null) ...[
+              const SizedBox(height: 6),
+              Text(fee, style: const TextStyle(fontSize: 12)),
+            ],
+            const SizedBox(height: 4),
+            const Text(
+              '출처: 대입정보포털 어디가 대학별 전형결과',
+              style: TextStyle(fontSize: 11),
+            ),
           ],
-          const SizedBox(height: 4),
-          const Text('출처: 대입정보포털 어디가 대학별 전형결과', style: TextStyle(fontSize: 11)),
-        ],
+        ),
       ),
     );
   }
